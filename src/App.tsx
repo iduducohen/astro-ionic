@@ -3,6 +3,7 @@ import {
   IonApp, IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, setupIonicReact,
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
+import { Analytics } from '@vercel/analytics/react';
 import { personCircleOutline, heartOutline, sparklesOutline, planetOutline, bulbOutline, gitNetworkOutline, handLeftOutline, pencilOutline, ellipsisVertical } from 'ionicons/icons';
 
 import ProfilePage from './pages/ProfilePage';
@@ -84,6 +85,7 @@ const App: React.FC = () => (
     <LangProvider>
       <Shell />
     </LangProvider>
+    <Analytics />
   </IonApp>
 );
 
