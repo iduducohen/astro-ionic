@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
+    "type-check": "tsc",
     "preview": "vite preview",
     "test": "node --experimental-strip-types --no-warnings src/core/astro.test.ts && node --experimental-strip-types --no-warnings src/core/chart.test.ts && node --experimental-strip-types --no-warnings src/core/reports.test.ts",
     "cap:sync": "npm run build && npx cap sync"

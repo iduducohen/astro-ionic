@@ -91,7 +91,13 @@ export const SEPHIROTH: Sephira[] = [
     position: { x: 30, y: 50 },
     planets: ['Mercury'],
     hebrewLetter: 'Beth',
-    archangel: 'Michael'
+    archangel: 'Michael',
+    divineName: 'Elohim Tzabaoth',
+    color: 'Yellow',
+    world: 'Yetzirah',
+    description: { he: 'הוד הוא ספירת הבינה', en: 'Hod is the sphere of intellect' },
+    virtue: { he: 'מדע', en: 'Science' },
+    vice: { he: 'כישוף', en: 'Cunning' }
   },
   {
     id: 'netzach',
