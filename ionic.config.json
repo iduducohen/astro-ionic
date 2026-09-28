@@ -1,0 +1,1 @@
+{ "name": "astro-ionic", "integrations": { "capacitor": {} }, "type": "react-vite" }

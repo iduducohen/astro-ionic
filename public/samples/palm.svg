@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="560" viewBox="0 0 440 560">
+  <rect width="440" height="560" fill="#f5f6f8"/>
+  <g fill="#f1d5bf" stroke="#b8896a" stroke-width="2.5" stroke-linejoin="round">
+    <rect x="128" y="70" width="46" height="190" rx="23"/>
+    <rect x="180" y="40" width="48" height="215" rx="24"/>
+    <rect x="234" y="62" width="46" height="195" rx="23"/>
+    <rect x="286" y="118" width="40" height="150" rx="20"/>
+    <path d="M128 250 C 70 250 40 215 55 185 C 70 160 105 190 125 225 Z"/>
+    <path d="M120 230 L 330 240 C 338 330 330 420 300 480 C 270 520 170 525 140 490 C 110 455 95 380 98 310 C 100 270 105 245 120 230 Z"/>
+  </g>
+  <g fill="none" stroke-width="4" stroke-linecap="round">
+    <path d="M325 300 C 290 290 250 288 215 290 C 190 292 170 280 160 262" stroke="#c2456b"/>
+    <path d="M112 318 C 160 330 230 345 300 372" stroke="#2f6fb3"/>
+    <path d="M118 312 C 150 340 160 400 175 490" stroke="#2e7d6b"/>
+    <path d="M225 495 C 222 430 220 380 218 320" stroke="#8a6519" stroke-dasharray="7 6"/>
+  </g>
+  <text x="335" y="296" font-size="15" font-weight="600" fill="#c2456b" text-anchor="start" font-family="Arial Hebrew, Arial, sans-serif">קו הלב</text>
+  <text x="306" y="392" font-size="15" font-weight="600" fill="#2f6fb3" text-anchor="start" font-family="Arial Hebrew, Arial, sans-serif">קו הראש</text>
+  <text x="40" y="440" font-size="15" font-weight="600" fill="#2e7d6b" text-anchor="start" font-family="Arial Hebrew, Arial, sans-serif">קו החיים</text>
+  <text x="232" y="520" font-size="15" font-weight="600" fill="#8a6519" text-anchor="start" font-family="Arial Hebrew, Arial, sans-serif">קו הגורל</text>
+  <text x="220" y="30" font-size="15" font-weight="600" fill="#1b2438" text-anchor="middle" font-family="Arial Hebrew, Arial, sans-serif">כף יד — דוגמה לצילום</text>
+</svg>
