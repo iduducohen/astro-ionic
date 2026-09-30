@@ -3,8 +3,8 @@
  * הפירושים מורכבים מרכיבים: כוכב (מה) × מזל (איך) × בית (איפה) × היבט (איך מתחברים).
  * כך 10 כוכבים × 12 מזלות × 12 בתים מקבלים טקסט קוהרנטי בלי אלפי משפטים כתובים ידנית.
  */
-import type { L } from './astro.ts';
-import type { AspectId, PointId } from './chart.ts';
+import type { L } from './astro';
+import type { AspectId, PointId } from './chart';
 
 export interface PointInfo {
   name: L;

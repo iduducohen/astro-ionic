@@ -1,0 +1,10 @@
+@if (charts.chart(); as chart) {
+  <app-hd-chart [chart]="chart"></app-hd-chart>
+  <p class="hd-note">{{ t('Human Design היא מערכת להתבוננות עצמית ורוחנית. אין כיום בסיס מדעי מבוסס לכך שהמערכת יכולה למדוד אישיות, לקבל החלטות עבור אדם או לחזות את התנהגותו.', 'Human Design is a spiritual system for self-reflection. There is no established scientific basis for it measuring personality, making decisions for a person, or predicting behavior.') }}</p>
+} @else {
+  <section class="hd-empty">
+    <h2>{{ t('עדיין אין מפה', 'No chart yet') }}</h2>
+    <p>{{ t('אחרי פרטי הלידה תופיע כאן המפה: סוג, אסטרטגיה, סמכות ופרופיל.', 'After the birth details, the chart will appear here: type, strategy, authority and profile.') }}</p>
+    <ion-button routerLink="/hd/birth" expand="block" class="btn-main">{{ t('יצירת המפה', 'Create the chart') }}</ion-button>
+  </section>
+}

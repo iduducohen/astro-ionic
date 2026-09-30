@@ -1,0 +1,28 @@
+<section class="hd-chart" [attr.aria-label]="t('סיכום המפה', 'Chart summary')">
+  <p class="hd-kicker">{{ text(chart().typeRole) }}</p>
+  <h2>{{ text(chart().typeName) }}</h2>
+  <dl class="hd-facts">
+    <div>
+      <dt>{{ t('סוג', 'Type') }}</dt>
+      <dd><a routerLink="/hd/type">{{ text(chart().typeName) }}</a></dd>
+    </div>
+    <div>
+      <dt>{{ t('אסטרטגיה', 'Strategy') }}</dt>
+      <dd><a routerLink="/hd/strategy">{{ text(chart().strategy) }}</a></dd>
+    </div>
+    <div>
+      <dt>{{ t('סמכות', 'Authority') }}</dt>
+      <dd><a routerLink="/hd/authority">{{ text(chart().authorityName) }}</a></dd>
+    </div>
+    <div>
+      <dt>{{ t('פרופיל', 'Profile') }}</dt>
+      <dd><a routerLink="/hd/profile">{{ text(chart().profileLabel) }}</a></dd>
+    </div>
+  </dl>
+  @if (chart().timeLimited) {
+    <p class="hd-note">{{ t('שעת הלידה לא ידועה, ולכן הפירוט הזה מוגבל.', 'The birth time is unknown, so this reading is limited.') }}</p>
+  }
+  <figure class="hd-graph">
+    <figcaption>{{ t('תרשים הגוף, המרכזים והשערים יתווספו כאן. התצוגה מופרדת מהחישוב, כדי שאפשר יהיה לחבר מנוע אחר.', 'The bodygraph, centers and gates will be added here. The view is separate from the calculation, so another engine can be connected.') }}</figcaption>
+  </figure>
+</section>

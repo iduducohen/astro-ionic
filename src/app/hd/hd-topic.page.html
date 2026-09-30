@@ -1,0 +1,49 @@
+@if (charts.chart(); as chart) {
+  <article class="hd-panel">
+    <h2>{{ title() }}</h2>
+    <p class="hd-kicker">{{ t('לפי המערכת', 'In this system') }}</p>
+    @switch (topic()) {
+      @case ('type') {
+        <p class="hd-value">{{ text(chart.typeName) }}</p>
+        <p class="hd-en">{{ chart.typeName.en }}</p>
+        <p>{{ text(chart.typeRole) }}</p>
+        <p>{{ text(chart.typeDescription) }}</p>
+        <p><strong>{{ t('אסטרטגיה', 'Strategy') }}:</strong> {{ text(chart.strategy) }}</p>
+      }
+      @case ('strategy') {
+        <p class="hd-value">{{ text(chart.strategy) }}</p>
+        <h3>{{ t('מהי האסטרטגיה?', 'What is the strategy?') }}</h3>
+        <p>{{ t('לפי המערכת, זו דרך הפעולה שנהוג לקשר לסוג האנרגיה. אפשר להשתמש בה כשאלה להתבוננות, לא כהוראה.', 'In this system, this is the way of acting usually linked to the energy type. It can be a question for reflection, not an instruction.') }}</p>
+        <h3>{{ t('מה זה אומר ביום-יום?', 'What might this mean day to day?') }}</h3>
+        <ul class="hd-list">
+          <li>{{ t('בעבודה: לשים לב מתי יש דחף לפעול ומתי מחכים לתגובה או להזמנה.', 'At work: notice when there is an urge to act, and when the system would say to wait for a response or an invitation.') }}</li>
+          <li>{{ t('בקשר: לבדוק אם הפעולה מגיעה מתוך לחץ או מתוך משהו שהגיע מבחוץ.', 'In relationships: notice whether an action comes from pressure or from something that arrived from outside.') }}</li>
+          <li>{{ t('בהחלטה: האסטרטגיה אינה מחליטה במקומך.', 'In a decision: the strategy does not decide for you.') }}</li>
+        </ul>
+        <p class="hd-note">{{ t('נסו לשים לב השבוע מתי פעלתם מתוך הדפוס הזה, ומתי לא.', 'This week, notice when you acted in this pattern, and when you did not.') }}</p>
+      }
+      @case ('authority') {
+        <p class="hd-value">{{ text(chart.authorityName) }}</p>
+        <p>{{ t('השם וההסבר מגיעים מנתוני המערכת, לא מקוד המסך. בין מקורות Human Design יש הבדלי מונחים.', 'The name and explanation come from the system data, not from the screen code. Human Design sources use different terms.') }}</p>
+        <p>{{ t('אפשר לשאול: איפה בגוף או במחשבה אני בודק החלטה, וכמה זמן אני נותן לה לפני שאני נענה.', 'A question to sit with: where in the body or the mind a decision gets checked, and how long it is given before answering.') }}</p>
+      }
+      @case ('profile') {
+        <p class="hd-profile">{{ text(chart.profileLabel) }}</p>
+        <p>{{ t('הפרופיל הוא שילוב של שני קווים. אין כאן פרופיל טוב יותר או נכון יותר.', 'A profile is a pair of lines. No profile here is better or more correct.') }}</p>
+        <h3>{{ t('שאלות להתבוננות', 'Questions to sit with') }}</h3>
+        <ul class="hd-list">
+          <li>{{ t('איזה חלק בתיאור מוכר, ואיזה חלק לא?', 'Which part of the description feels familiar, and which does not?') }}</li>
+          <li>{{ t('מה הייתי רוצה לבדוק השבוע, בלי להפוך את זה לכלל?', 'What would I like to notice this week, without turning it into a rule?') }}</li>
+        </ul>
+      }
+    }
+    <p class="hd-note">{{ t('זהו פירוש רוחני להתבוננות. הוא אינו עובדה מדעית ואינו אבחון.', 'This is a spiritual interpretation for reflection. It is not a scientific fact and not a diagnosis.') }}</p>
+    <a routerLink="/hd/chart">{{ t('חזרה למפה', 'Back to the chart') }}</a>
+  </article>
+} @else {
+  <section class="hd-empty">
+    <h2>{{ title() }}</h2>
+    <p>{{ t('החלק הזה נפתח אחרי יצירת המפה.', 'This section opens after the chart is created.') }}</p>
+    <ion-button routerLink="/hd/birth" expand="block" class="btn-main">{{ t('יצירת המפה', 'Create the chart') }}</ion-button>
+  </section>
+}

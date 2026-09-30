@@ -7,11 +7,11 @@
 import {
   ELEMENTS, NUMBER_MEANINGS, elementScore, hebrewDate, nameNumber, parseDate, reduceNumber,
   type Element, type L, type Lang,
-} from './astro.ts';
-import { crossAspects, norm, signOf, type AspectId, type Chart, type PlanetId, type PointId } from './chart.ts';
-import { chartFor, type BirthData } from './techniques.ts';
-import { PATHS22, sephira, sephiraForNumber, type SephiraId, type TreeSephira } from './tree.ts';
-import { MAJOR_ARCANA } from './tarot.ts';
+} from './astro';
+import { crossAspects, norm, signOf, type AspectId, type Chart, type PlanetId, type PointId } from './chart';
+import { chartFor, type BirthData } from './techniques';
+import { PATHS22, sephira, sephiraForNumber, type SephiraId, type TreeSephira } from './tree';
+import { MAJOR_ARCANA } from './tarot';
 
 const x = (he: string, en: string): L => ({ he, en });
 const avg = (a: number[]) => (a.length ? Math.round(a.reduce((s, v) => s + v, 0) / a.length) : 50);

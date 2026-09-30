@@ -1,0 +1,103 @@
+<app-screen [title]="lang.text().tools[tool()]" back="/charts">
+  <a class="back-link" routerLink="/charts" [queryParams]="lang.lang() === 'en' ? { lang: 'en' } : null">{{ lang.lang() === 'he' ? 'חזרה למפות' : 'Back to charts' }}</a>
+  <h1 class="page-title">{{ lang.text().tools[tool()] }}</h1>
+  <p class="page-intro">{{ lang.text().toolDesc[tool()] }}</p>
+  <form (submit)="submit($event)" class="form-grid">
+    @if (tool() === 'natal' || tool() === 'karmic' || tool() === 'forecast' || tool() === 'synastry') {
+      <div class="form-card">
+        <h2 class="section-label">{{ lang.text().myDetails }}</h2>
+        <ion-input mode="md" [label]="lang.text().name" labelPlacement="stacked" fill="outline" [value]="me.name" (ionInput)="me.name = $any($event).detail.value ?? ''"></ion-input>
+        <div class="pair">
+          <app-when kind="date" [label]="lang.text().birthDate" [value]="me.date" (valueChange)="me.date = $event"></app-when>
+          <app-when kind="time" [label]="lang.text().birthTime" [value]="me.time" [disabled]="!me.timeKnown" (valueChange)="me.time = $event"></app-when>
+        </div>
+        <ion-checkbox [checked]="!me.timeKnown" (ionChange)="me.timeKnown = !$any($event).detail.checked" labelPlacement="end">{{ lang.text().timeUnknown }}</ion-checkbox>
+        <label class="native-field"><span>{{ lang.text().birthPlace }}</span>
+          <select [value]="cc" (change)="cc = $any($event.target).value">
+            @for (c of countries; track c) { <option [value]="c">{{ countryName(c) }}</option> }
+          </select>
+        </label>
+        <label class="native-field"><span></span>
+          <select [value]="me.placeId" (change)="me.placeId = $any($event.target).value; place = me.placeId">
+            @for (city of cities(); track city.id) { <option [value]="city.id">{{ city.name[lang.lang()] }}</option> }
+          </select>
+        </label>
+      </div>
+    }
+    @if (tool() === 'synastry') {
+      <div class="form-card">
+        <h2 class="section-label">{{ lang.text().partnerDetails }}</h2>
+        <ion-input mode="md" [label]="lang.text().name" labelPlacement="stacked" fill="outline" [value]="pt.name" (ionInput)="pt.name = $any($event).detail.value ?? ''"></ion-input>
+        <div class="pair">
+          <app-when kind="date" [label]="lang.text().birthDate" [value]="pt.date" (valueChange)="pt.date = $event"></app-when>
+          <app-when kind="time" [label]="lang.text().birthTime" [value]="pt.time" (valueChange)="pt.time = $event"></app-when>
+        </div>
+        <label class="native-field"><span>{{ lang.text().birthPlace }}</span>
+          <select [value]="pt.placeId" (change)="pt.placeId = $any($event.target).value">
+            @for (city of cities(); track city.id) { <option [value]="city.id">{{ city.name[lang.lang()] }}</option> }
+          </select>
+        </label>
+      </div>
+    }
+    @if (tool() === 'horary') {
+      <div class="form-card">
+        <ion-input mode="md" [label]="lang.text().horaryQuestion" labelPlacement="stacked" fill="outline" [placeholder]="lang.text().horaryPlaceholder" [value]="hq" (ionInput)="hq = $any($event).detail.value ?? ''"></ion-input>
+        <label class="native-field"><span>{{ lang.text().horaryCategory }}</span>
+          <select [value]="hcat" (change)="hcat = $any($event.target).value">
+            @for (item of horaryLabels; track item[0]) { <option [value]="item[0]">{{ item[1][lang.lang()] }}</option> }
+          </select>
+        </label>
+        <label class="native-field"><span>{{ lang.text().wherePlace }}</span>
+          <select [value]="place" (change)="place = $any($event.target).value">
+            @for (city of cities(); track city.id) { <option [value]="city.id">{{ city.name[lang.lang()] }}</option> }
+          </select>
+        </label>
+        <ion-segment [value]="hwhen" (ionChange)="hwhen = $any($event).detail.value">
+          <ion-segment-button value="now"><ion-label>{{ lang.text().horaryNow }}</ion-label></ion-segment-button>
+          <ion-segment-button value="custom"><ion-label>{{ lang.text().horaryCustom }}</ion-label></ion-segment-button>
+        </ion-segment>
+        @if (hwhen === 'custom') {
+          <div class="pair">
+            <app-when kind="date" [label]="lang.text().eventDate" [value]="hDate" (valueChange)="hDate = $event"></app-when>
+            <app-when kind="time" [label]="lang.text().eventTime" [value]="hTime" (valueChange)="hTime = $event"></app-when>
+          </div>
+        }
+      </div>
+    }
+    @if (tool() === 'election') {
+      <div class="form-card">
+        <label class="native-field"><span>{{ lang.text().electionEvent }}</span>
+          <select [value]="ev" (change)="ev = $any($event.target).value">
+            @for (item of electionLabels; track item[0]) { <option [value]="item[0]">{{ item[1][lang.lang()] }}</option> }
+          </select>
+        </label>
+        <app-when kind="date" [label]="lang.text().electionFrom" [value]="efrom" (valueChange)="efrom = $event"></app-when>
+        <ion-input mode="md" [label]="lang.text().electionDays" labelPlacement="stacked" fill="outline" type="number" [value]="edays" (ionInput)="edays = +($any($event).detail.value ?? 30)"></ion-input>
+      </div>
+    }
+    @if (tool() === 'mundane') {
+      <div class="form-card">
+        <label class="native-field"><span>{{ lang.text().country }}</span>
+          <select [value]="nation" (change)="nation = $any($event.target).value">
+            @for (n of nations; track n.id) { <option [value]="n.id">{{ n.name[lang.lang()] }}</option> }
+            <option value="custom">{{ lang.text().customEvent }}</option>
+          </select>
+        </label>
+        @if (nation === 'custom') {
+          <ion-input mode="md" [label]="lang.text().eventName" labelPlacement="stacked" fill="outline" [value]="mName" (ionInput)="mName = $any($event).detail.value ?? ''"></ion-input>
+          <div class="pair">
+            <app-when kind="date" [label]="lang.text().eventDate" [value]="mDate" (valueChange)="mDate = $event"></app-when>
+            <app-when kind="time" [label]="lang.text().eventTime" [value]="mTime" (valueChange)="mTime = $event"></app-when>
+          </div>
+        }
+      </div>
+    }
+    @if (error) { <p role="alert" class="err">{{ error }}</p> }
+    <ion-button type="submit" expand="block" class="btn-main" [disabled]="busy">
+      @if (busy) { <ion-spinner name="dots"></ion-spinner> }
+      {{ busy ? lang.text().computing : lang.text().calc }}
+    </ion-button>
+    <button type="button" class="sample-link" (click)="sample()">{{ lang.lang() === 'he' ? 'רוצים לראות דוגמה? מילוי מפה לדוגמה' : 'Want to see an example? Fill a sample chart' }}</button>
+  </form>
+  <div class="tool-result" aria-live="polite" [innerHTML]="html"></div>
+</app-screen>

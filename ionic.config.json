@@ -1,1 +1,7 @@
-{ "name": "astro-ionic", "integrations": { "capacitor": {} }, "type": "react-vite" }
+{
+  "name": "astro",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

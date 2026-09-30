@@ -1,0 +1,27 @@
+import type { IssueCode } from './types';
+
+export const ISSUE_TEXT: Record<IssueCode, { he: string; en: string }> = {
+  'too-large': { he: 'הקובץ גדול מדי.', en: 'The file is too large.' },
+  'bad-type': { he: 'סוג הקובץ אינו נתמך. אפשר להעלות JPG, PNG או WEBP.', en: 'This file type is not supported. Use JPG, PNG or WEBP.' },
+  damaged: { he: 'לא הצלחנו לקרוא את התמונה. נסו קובץ אחר.', en: 'The image could not be read. Try another file.' },
+  'too-small-dims': { he: 'התמונה קטנה מדי. צלמו מקרוב יותר, כך שהפנים או כף היד ממלאות את הפריים.', en: 'The image is too small. Move closer so the face or palm fills the frame.' },
+  'too-large-dims': { he: 'התמונה גדולה מדי לעיבוד. נסו קובץ קטן יותר.', en: 'The image is too large to process. Try a smaller file.' },
+  'bad-aspect': { he: 'יחס המידות של התמונה אינו מתאים. צלמו את הנושא במרכז הפריים.', en: 'The image proportions do not fit. Keep the subject in the center of the frame.' },
+  empty: { he: 'התמונה ריקה או בלי פרטים. נסו תמונה אחרת.', en: 'The image looks empty. Try another photo.' },
+  dark: { he: 'התמונה חשוכה מדי. מומלץ לצלם מחדש באור יום רך, בלי פלאש.', en: 'The photo is too dark. Soft daylight, without flash, works better.' },
+  bright: { he: 'התמונה בהירה מדי. מומלץ לצלם מחדש בלי אור ישיר.', en: 'The photo is too bright. Try again without direct light.' },
+  blurry: { he: 'התמונה מטושטשת. החזיקו את המכשיר יציב ונסו שוב.', en: 'The photo is blurry. Hold the device steady and try again.' },
+  'no-face': { he: 'לא הצלחנו לזהות פנים ברורות בתמונה. נסה לצלם תמונה חזיתית וברורה יותר.', en: 'No clear face was found. Try a sharper, front-facing photo.' },
+  'many-faces': { he: 'נמצאו מספר פנים בתמונה. יש להעלות תמונה שבה מופיע אדם אחד בלבד.', en: 'More than one face was found. Use a photo with one person only.' },
+  'face-small': { he: 'הפנים קטנות מדי ביחס לתמונה. התקרבו מעט וצלמו שוב.', en: 'The face is too small in the frame. Move a little closer.' },
+  'face-cropped': { he: 'הפנים חתוכות בתמונה. יש לצלם כך שכל הפנים נכנסות לפריים.', en: 'The face is cut off. Keep the whole face inside the frame.' },
+  'face-unclear': { he: 'הפנים לא ברורות מספיק. כדאי לצלם באור רך ובלי תזוזה.', en: 'The face is not clear enough. Soft light and a steady camera help.' },
+  'no-palm': { he: 'לא הצלחנו לזהות כף יד ברורה. ודא שכף היד פתוחה, ישרה וכל כף היד נמצאת בתוך התמונה.', en: 'No clear palm was found. Keep the hand open, straight, and fully inside the frame.' },
+  'palm-cropped': { he: 'נראה שכף היד חתוכה. ודאו שכל כף היד, כולל האצבעות, נמצאת בתוך התמונה.', en: 'The palm looks cut off. Keep the whole hand, including the fingers, inside the frame.' },
+  'palm-unclear': { he: 'לא הצלחנו לראות קווים ברורים בכף היד. צלמו באור טוב, בלי פלאש ובלי טשטוש.', en: 'The palm lines are not clear enough. Use good light, no flash, and avoid blur.' },
+  disallowed: { he: 'התמונה אינה מתאימה לשימוש במערכת. אנא העלה תמונה אחרת.', en: 'This image cannot be used. Please choose another one.' },
+  quota: { he: 'אפשר להמשיך בעוד רגע.', en: 'Please wait a moment and try again.' },
+  cancelled: { he: 'ההעלאה בוטלה.', en: 'The upload was cancelled.' },
+  'camera-denied': { he: 'לא ניתן להשתמש במצלמה ללא הרשאה. ניתן לאפשר גישה למצלמה בהגדרות המכשיר או לבחור תמונה מהגלריה.', en: 'The camera needs permission. Allow it in the device settings, or choose a photo from the gallery.' },
+  'camera-missing': { he: 'צילום זמין במכשירים תומכים. ניתן להעלות תמונה מהמחשב.', en: 'The camera is available on supported devices. You can upload a photo from this computer.' },
+};

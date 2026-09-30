@@ -2,7 +2,7 @@
  * tree.ts — עץ החיים: 10 ספירות, 22 נתיבים ואותיות, ואותיות החודשים לפי ספר יצירה.
  * מבנה הנתיבים לפי הסידור המקובל (הגר״א/קירכר), כולל הקבלה לקלפי הארקנה הגדולה.
  */
-import type { L } from './astro.ts';
+import type { L } from './astro';
 
 export type SephiraId = 'keter' | 'chokhmah' | 'binah' | 'chesed' | 'gevurah' | 'tiferet' | 'netzach' | 'hod' | 'yesod' | 'malkhut';
 export type Pillar = 'right' | 'left' | 'middle';

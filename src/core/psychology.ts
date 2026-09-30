@@ -3,7 +3,7 @@
  * MBTI: 20 / 64 היגדים · אניאגרם: 27 / 72 · Big Five: 20 / 50 (במבנה IPIP-50, חצי הפוכים).
  * סולם תשובה 1–5 (בכלל לא מתאים … מתאים מאוד).
  */
-import type { L } from './astro.ts';
+import type { L } from './astro';
 
 export type TestId = 'mbti' | 'enneagram' | 'bigfive';
 export interface Q { id: string; text: L; key: string; reverse?: boolean }

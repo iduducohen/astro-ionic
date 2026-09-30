@@ -3,7 +3,16 @@
     "allow": [
       "Artifact",
       "PowerShell(npm install *)",
-      "Bash(git init *)"
+      "Bash(git init *)",
+      "Bash(git config *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git remote *)",
+      "Bash(git branch *)",
+      "Bash(git push *)",
+      "Bash(npm install *)",
+      "Bash(git commit -m 'Fix Vercel build permissions error *)",
+      "Bash(git commit -m 'Remove invalid nodeVersion from vercel.json *)",
+      "Bash(git commit -m 'Add SPA routing rewrites to vercel.json *)"
     ]
   }
 }

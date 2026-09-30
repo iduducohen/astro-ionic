@@ -1,0 +1,214 @@
+<app-screen [title]="t('מבחני אישיות', 'Personality tests')">
+  <div class="psy-app">
+    @if (view === 'home' || view === 'tests' || view === 'profile') {
+      <div class="psy-top">
+        <p class="psy-kicker">{{ t('אישיות', 'Personality') }}</p>
+        <button type="button" class="psy-cta sm" (click)="go('tests')">{{ t('התחל', 'Start') }}</button>
+      </div>
+      <nav class="psy-nav" [attr.aria-label]="t('ניווט במבחנים', 'Test navigation')">
+        <button type="button" [class.on]="view === 'home'" (click)="go('home')">{{ t('בית', 'Home') }}</button>
+        <button type="button" [class.on]="view === 'tests'" (click)="go('tests')">{{ t('מבחנים', 'Tests') }}</button>
+        <button type="button" [class.on]="view === 'profile'" (click)="go('profile')">{{ t('התוצאות שלי', 'My results') }}</button>
+      </nav>
+    }
+
+    @if (view === 'home') {
+      <header class="psy-hero">
+        <h1>{{ t('להכיר את עצמך קצת יותר', 'Get to know yourself a little better') }}</h1>
+        <p>{{ t('שלושה מודלים פופולריים שיעזרו להתבונן בדפוסי האישיות, ההעדפות וההתנהגות.', 'Three popular models for looking at patterns of personality, preference and behavior.') }}</p>
+      </header>
+      <div class="psy-grid">
+        @for (id of tests; track id) {
+          <app-test-card [badge]="meta(id)" [title]="title(id)" [text]="blurb(id)" [cta]="t('התחל מבחן', 'Start test')" [moreLabel]="moreLabel(id)" [moreOn]="about === id" (more)="toggleAbout(id)" (open)="open(id)"></app-test-card>
+        }
+      </div>
+      @if (about; as id) {
+        <section class="psy-about" id="psy-about">
+          <h2>{{ aboutTitle(id) }}</h2>
+          <p>{{ aboutLead(id) }}</p>
+          <ul>
+            @for (row of aboutRows(id); track row.title) {
+              <li><b>{{ row.title }}</b><span>{{ row.text }}</span></li>
+            }
+          </ul>
+          <p class="psy-note">{{ aboutFoot(id) }}</p>
+        </section>
+      }
+      <app-disclaimer [text]="disclaimer()"></app-disclaimer>
+    }
+
+    @if (view === 'tests') {
+      <h1 class="psy-h">{{ t('בחירת מבחן', 'Choose a test') }}</h1>
+      <div class="psy-grid">
+        @for (id of tests; track id) {
+          <app-test-card [badge]="meta(id)" [title]="title(id)" [text]="blurb(id)" [cta]="hasDraft(id) ? t('המשך מבחן', 'Continue test') : t('התחל מבחן', 'Start test')" [moreLabel]="moreLabel(id)" [moreOn]="about === id" (more)="toggleAbout(id)" (open)="open(id)"></app-test-card>
+        }
+      </div>
+      @if (about; as id) {
+        <section class="psy-about" id="psy-about">
+          <h2>{{ aboutTitle(id) }}</h2>
+          <p>{{ aboutLead(id) }}</p>
+          <ul>
+            @for (row of aboutRows(id); track row.title) {
+              <li><b>{{ row.title }}</b><span>{{ row.text }}</span></li>
+            }
+          </ul>
+          <p class="psy-note">{{ aboutFoot(id) }}</p>
+        </section>
+      }
+      <app-disclaimer [text]="disclaimer()"></app-disclaimer>
+    }
+
+    @if (view === 'profile') {
+      <h1 class="psy-h">{{ t('פרופיל האישיות שלי', 'My personality profile') }}</h1>
+      <div class="psy-grid">
+        @for (id of tests; track id) {
+          <article class="psy-test">
+            <p class="psy-badge">{{ title(id) }}</p>
+            @if (doneOf(id)) {
+              <h2>{{ summary(id) }}</h2>
+              <p class="psy-ok">{{ t('הושלם', 'Completed') }}</p>
+              <button type="button" class="psy-cta" (click)="watch(id)">{{ t('צפה בתוצאה', 'View result') }}</button>
+            } @else {
+              <h2>{{ title(id) }}</h2>
+              <p>{{ t('עדיין אין כאן תוצאה.', 'No result here yet.') }}</p>
+              <button type="button" class="psy-cta" (click)="open(id)">{{ t('התחל עכשיו', 'Start now') }}</button>
+            }
+          </article>
+        }
+      </div>
+    }
+
+    @if (view === 'intro' && test) {
+      <button type="button" class="psy-back" (click)="go('home')">{{ t('חזרה', 'Back') }}</button>
+      <article class="psy-panel">
+        <p class="psy-badge">{{ title(test) }}</p>
+        <h1>{{ introTitle(test) }}</h1>
+        <p>{{ t('סדרה קצרה של שאלות. אין תשובות נכונות או לא נכונות. בוחרים את האפשרות שהכי מתארת אותך בדרך כלל.', 'A short set of questions. There are no right or wrong answers. Pick the option that describes you most of the time.') }}</p>
+        <ul class="psy-facts">
+          <li><b>{{ count(test) }}</b><span>{{ t('שאלות', 'questions') }}</span></li>
+          <li><b>{{ minutes(test) }} {{ t('דק׳', 'min') }}</b><span>{{ t('זמן משוער', 'estimated time') }}</span></li>
+          <li><b>{{ t('קל', 'Easy') }}</b><span>{{ t('רמת קושי', 'difficulty') }}</span></li>
+        </ul>
+        <button type="button" class="psy-cta" (click)="start(!hasDraft())">{{ hasDraft() ? t('המשך', 'Continue') : t('התחל', 'Start') }}</button>
+        @if (hasDraft()) {
+          <button type="button" class="psy-text" (click)="start(true)">{{ t('התחלה מחדש', 'Start over') }}</button>
+        }
+        <app-disclaimer [text]="disclaimer()"></app-disclaimer>
+      </article>
+    }
+
+    @if (view === 'q' && test) {
+      <article class="psy-panel psy-q" [attr.data-i]="index">
+        <header class="psy-qhead">
+          <button type="button" class="psy-text" (click)="exit()">{{ t('יציאה', 'Exit') }}</button>
+          <strong>{{ title(test) }}</strong>
+          <span>{{ t('שאלה', 'Question') }} {{ index + 1 }} {{ t('מתוך', 'of') }} {{ questions.length }}</span>
+        </header>
+        <app-progress-bar [value]="progress()" [label]="t('התקדמות', 'Progress')"></app-progress-bar>
+        <h1>{{ q().text[lang.lang()] }}</h1>
+        <app-answer-scale [legend]="t('סולם תשובות', 'Answer scale')" [options]="options()" [selected]="selected()" (pick)="pick($event)"></app-answer-scale>
+        <div class="psy-qfoot">
+          <button type="button" class="psy-text" (click)="backQ()">{{ index === 0 ? t('חזרה למבוא', 'Back to intro') : t('השאלה הקודמת', 'Previous question') }}</button>
+          <p>{{ t('לא בטוח/ה? אין תשובה נכונה או לא נכונה.', 'Not sure? There is no right or wrong answer.') }}</p>
+        </div>
+      </article>
+    }
+
+    @if (view === 'mid') {
+      <article class="psy-panel psy-center">
+        <h1>{{ t('מעולה, ממשיכים.', 'Good. On we go.') }}</h1>
+        <p>{{ t('השלמת כמחצית מהמבחן.', 'About half of the test is done.') }}</p>
+        <button type="button" class="psy-cta" (click)="continueMid()">{{ t('המשך', 'Continue') }}</button>
+      </article>
+    }
+
+    @if (view === 'load') {
+      <article class="psy-panel psy-center" aria-live="polite">
+        <div class="psy-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+        <h1>{{ t('מסכמים את התשובות שלך...', 'Summing up your answers...') }}</h1>
+        <p>{{ t('זה חישוב מקומי של מה שסימנת, כאן במכשיר.', 'This is a local calculation of what you marked, on this device.') }}</p>
+      </article>
+    }
+
+    @if (view === 'result' && test === 'mbti' && mbti) {
+      <article class="psy-panel">
+        <p class="psy-badge">MBTI</p>
+        <h1>{{ t('הטיפוס שלך', 'Your type') }}</h1>
+        <p class="psy-code" dir="ltr">{{ mbti.type }}</p>
+        <p class="psy-sub">{{ typeName() }}</p>
+        <p>{{ typeShort() }}</p>
+        <div class="psy-axes">
+          @for (axis of axes; track axis.a; let i = $index) {
+            <app-score-bar [label]="axisRow(i).name" [value]="axisRow(i).pct" [hint]="axisRow(i).note"></app-score-bar>
+          }
+        </div>
+        <h2>{{ t('חוזקות אפשריות', 'Possible strengths') }}</h2>
+        <ul>@for (item of strengths(); track item) { <li>{{ item }}</li> }</ul>
+        <h2>{{ t('נקודות שכדאי לשים לב אליהן', 'Points worth noticing') }}</h2>
+        <ul>@for (item of watchouts(); track item) { <li>{{ item }}</li> }</ul>
+        <app-disclaimer [text]="t('התוצאה אינה אבחון מקצועי. היא משקפת את התשובות שסימנת במבחן המקוצר, ויכולה להצביע על נטייה — לא על עובדה קבועה.', 'The result is not a professional diagnosis. It reflects the answers you marked on this short test, and can point to a tendency rather than a fixed fact.')"></app-disclaimer>
+        <div class="psy-actions">
+          <button type="button" class="psy-cta" (click)="share()">{{ copied ? t('הטקסט הועתק', 'Text copied') : t('שתף תוצאה', 'Share result') }}</button>
+          <button type="button" class="psy-cta ghost" (click)="go('tests')">{{ t('נסה מבחן אחר', 'Try another test') }}</button>
+        </div>
+      </article>
+    }
+
+    @if (view === 'result' && test === 'enneagram' && enn) {
+      <article class="psy-panel">
+        <p class="psy-badge">{{ t('אניאגרם', 'Enneagram') }}</p>
+        <h1>{{ t('הטיפוס הדומיננטי שלך', 'Your dominant type') }}</h1>
+        <div class="psy-highlight">
+          <p class="psy-code">{{ t('טיפוס', 'Type') }} {{ enn.type }}</p>
+          <p class="psy-sub">{{ ennName(enn.type) }}</p>
+          <p>{{ enn.ranked[0].pct }}%</p>
+        </div>
+        <div class="psy-axes">
+          @for (row of enn.ranked; track row.type) {
+            <app-score-bar [label]="t('טיפוס', 'Type') + ' ' + row.type + ' · ' + ennName(row.type)" [value]="row.pct" [color]="row.type === enn.type ? 'var(--psy-primary)' : '#b7c0d0'"></app-score-bar>
+          }
+        </div>
+        <h2>{{ t('המוטיבציה המרכזית', 'The central motivation') }}</h2>
+        <p>{{ t('עשוי להתאים לרצון', 'This may fit a wish') }} {{ ennDesire() }}.</p>
+        <h2>{{ t('הפחד המרכזי', 'The central fear') }}</h2>
+        <p>{{ t('יכול להצביע על חשש', 'This can point to a concern about') }} {{ ennFear() }}.</p>
+        <h2>{{ t('מה עשוי לאפיין את הטיפוס', 'What might mark the type') }}</h2>
+        <p>{{ ennMark() }}</p>
+        <app-disclaimer [text]="t('הציון הגבוה ביותר מייצג את הטיפוס הדומיננטי לפי הגרסה המקוצרת הזו. זה אינו אבחון פסיכולוגי.', 'The highest score is the dominant type on this short version. This is not a psychological diagnosis.')"></app-disclaimer>
+        <div class="psy-actions">
+          <button type="button" class="psy-cta" (click)="share()">{{ copied ? t('הטקסט הועתק', 'Text copied') : t('שתף תוצאה', 'Share result') }}</button>
+          <button type="button" class="psy-cta ghost" (click)="go('tests')">{{ t('נסה מבחן אחר', 'Try another test') }}</button>
+        </div>
+      </article>
+    }
+
+    @if (view === 'result' && test === 'bigfive' && big) {
+      <article class="psy-panel">
+        <p class="psy-badge">Big Five</p>
+        <h1>{{ t('הפרופיל שלך', 'Your profile') }}</h1>
+        <div class="psy-axes">
+          @for (trait of traits; track trait.key) {
+            <article class="psy-trait" [style.--c]="traitColor(trait.key)">
+              <div class="psy-score-top"><span>{{ trait.name[lang.lang()] }}</span><b>{{ big[trait.key] }} / 100</b></div>
+              <p class="psy-band">{{ traitBand(big[trait.key]) }}</p>
+              <div class="psy-bar" aria-hidden="true"><i [style.width.%]="big[trait.key]"></i></div>
+              <p>{{ traitText(trait.key, big[trait.key]) }}</p>
+            </article>
+          }
+        </div>
+        <h2>{{ t('במבט אחד', 'At a glance') }}</h2>
+        <article class="psy-glance">
+          @for (trait of traits; track trait.key) {
+            <p><span [style.background]="traitColor(trait.key)"></span>{{ trait.name[lang.lang()] }} <b>{{ big[trait.key] }}</b></p>
+          }
+        </article>
+        <app-disclaimer [text]="disclaimer()"></app-disclaimer>
+        <div class="psy-actions">
+          <button type="button" class="psy-cta" (click)="share()">{{ copied ? t('הטקסט הועתק', 'Text copied') : t('שתף תוצאה', 'Share result') }}</button>
+          <button type="button" class="psy-cta ghost" (click)="go('tests')">{{ t('נסה מבחן אחר', 'Try another test') }}</button>
+        </div>
+      </article>
+    }
+  </div>
+</app-screen>

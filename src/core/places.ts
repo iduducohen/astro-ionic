@@ -2,8 +2,8 @@
  * places.ts — ערים מובנות וקואורדינטות, והמרת שעה מקומית ל-UTC.
  * רשימה מובנית (כל מדינות העולם) + הזנה ידנית; חיפוש מקוון מתבצע ב-PlaceSelect.
  */
-import type { L } from './astro.ts';
-import { WORLD_DATA, COUNTRY_FALLBACK } from './world-places.ts';
+import type { L } from './astro';
+import { WORLD_DATA, COUNTRY_FALLBACK } from './world-places';
 
 export interface Place {
   id: string;

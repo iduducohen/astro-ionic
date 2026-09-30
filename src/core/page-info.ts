@@ -2,7 +2,7 @@
  * page-info.ts — מה כל מסך עושה, בקצרה ובהרחבה.
  * התקציר מוצג בראש המסך; ה"קרא עוד" נפתח בחלון.
  */
-import type { L } from './astro.ts';
+import type { L } from './astro';
 
 export interface InfoSection { title: L; text: L }
 export interface PageInfo { summary: L; facts: L[]; more: InfoSection[] }
@@ -12,8 +12,8 @@ export type PageKey = 'me' | 'charts' | 'pair' | 'tarot' | 'psychology' | 'kabba
 export const PAGE_INFO: Record<PageKey, PageInfo> = {
   me: {
     summary: {
-      he: 'שם ותאריך לידה מספיקים כדי לקבל את המזל המערבי, המזל העברי לפי חודש הלידה, המזל הסיני, מספר דרך החיים ועוד, במקום אחד.',
-      en: 'A name and a birth date give you your Western, Hebrew and Chinese signs, your life path number and more, in one place.',
+      he: 'שם ותאריך נותנים את מזל השמש, המזל העברי, המזל הסיני ומספר דרך החיים. שעת לידה ומקום מוסיפים את הירח ואת המזל העולה.',
+      en: 'A name and a date give the Sun sign, the Hebrew and Chinese signs, and the life path number. A birth time and place add the Moon and the rising sign.',
     },
     facts: [
       { he: '12 מזלות מערביים', en: '12 Western signs' },
@@ -111,8 +111,8 @@ export const PAGE_INFO: Record<PageKey, PageInfo> = {
   },
   zohar: {
     summary: {
-      he: 'לפי ספר הזוהר (פרשת יתרו) אפשר ללמוד על אופיו של אדם מתווי הפנים ומקווי היד. מעלים תמונות פנים וכף יד, בוחרים מאפיינים ומקבלים פירוש.',
-      en: 'According to the Zohar (portion Yitro), a person\'s nature can be read in the face and the lines of the hand. Upload face and palm photos, choose features and get a reading.',
+      he: 'לפי המסורת המובאת בספר הזוהר, אפשר להתבונן בתווי הפנים ובקווי כף היד ולקבל פרשנות רוחנית. זו אינה אבחנה רפואית או מדעית.',
+      en: 'According to the tradition in the Zohar, the face and the lines of the palm can be read as a spiritual interpretation. It is not a medical or scientific diagnosis.',
     },
     facts: [
       { he: 'קריאת פנים (פרצוף)', en: 'Face reading (partzuf)' },
@@ -127,24 +127,24 @@ export const PAGE_INFO: Record<PageKey, PageInfo> = {
   },
   graphology: {
     summary: {
-      he: 'ניתוח כתב יד: מצלמים או מעלים דף בכתב ידך. המערכת מודדת את נטיית הכתב, גודל האותיות, הלחץ, קו הכתיבה והמרווחים, ומפרשת כל אחד מהם.',
-      en: 'Handwriting analysis: take or upload a photo of your handwriting. The app measures slant, letter size, pressure, baseline and spacing, and interprets each one.',
+      he: 'ניתוח כתב יד: מצלמים או מעלים דף בכתב ידך. המערכת מודדת את נטיית הכתב, גודל האותיות, הלחץ, קו הכתיבה והמרווחים. זו קריאה מסורתית, לא אבחון ולא עובדה מדעית.',
+      en: 'Handwriting analysis: take or upload a photo of your handwriting. The app measures slant, letter size, pressure, baseline and spacing. The reading is traditional, not a diagnosis and not a scientific fact.',
     },
     facts: [
       { he: '5 מאפיינים נמדדים', en: '5 measured features' },
-      { he: 'מצלמה או גלריה', en: 'Camera or gallery' },
+      { he: 'מצלמה, גלריה או קובץ', en: 'Camera, gallery, or file' },
       { he: 'הניתוח מתבצע במכשיר', en: 'Analyzed on your device' },
     ],
     more: [
       { title: { he: 'מה זו גרפולוגיה?', en: 'What is graphology?' }, text: { he: 'ניסיון ללמוד על אישיות מתוך צורת הכתב. התחום התפתח בצרפת ובגרמניה במאה ה-19. בישראל השתמשו בו בעבר במיונים לעבודה, אבל תוקפו המדעי שנוי במחלוקת, ולכן כדאי להתייחס לתוצאה כנקודה למחשבה.', en: 'An attempt to learn about personality from the form of writing, developed in 19th-century France and Germany. It has been used in hiring, but its scientific validity is disputed, so treat the result as food for thought.' } },
       { title: { he: 'מה נמדד בתמונה?', en: 'What is measured in the photo?' }, text: { he: 'נטייה: הזווית שבה הקווים האנכיים ישרים ביותר. גודל: גובה שורת טקסט ביחס לרוחב הדף. לחץ: כהות הדיו. קו כתיבה: האם השורות עולות או יורדות. מרווח: היחס בין רווחים לדיו בתוך השורה.', en: 'Slant: the angle at which vertical strokes line up best. Size: line height relative to page width. Pressure: how dark the ink is. Baseline: whether lines rise or fall. Spacing: the ratio of gaps to ink within a line.' } },
-      { title: { he: 'איך לצלם?', en: 'How to take the photo' }, text: { he: 'לפחות 3–4 שורות בעט כחול או שחור על נייר לבן בלי שורות. מצלמים ישר מלמעלה, באור טוב ובלי צל. אם המדידה נראית לך שגויה, אפשר לתקן ידנית כל מאפיין.', en: 'At least 3–4 lines in blue or black pen on plain white paper. Shoot straight from above, in good light, with no shadow. If a measurement looks wrong, you can correct each feature by hand.' } },
+      { title: { he: 'איך לצלם?', en: 'How to take the photo' }, text: { he: 'לפחות 3–4 שורות בעט כחול או שחור על נייר לבן בלי שורות. מצלמים ישר מלמעלה, באור טוב ובלי צל. התמונה נבדקת במכשיר לפני הניתוח, ולא נשמרת אחר כך.', en: 'At least 3–4 lines in blue or black pen on plain white paper. Shoot straight from above, in good light, with no shadow. The photo is checked on the device before analysis, and it is not kept afterwards.' } },
     ],
   },
   hd: {
     summary: {
-      he: 'עיצוב אנושי משלב אסטרולוגיה, קבלה, צ\'אקרות והפיזיקה הקוונטית. לפי תאריך לידה ושעה מקבלים את סוג האנרגיה שלך, הרשות והאסטרטגיה שלך, והפרופיל שלך.',
-      en: 'Human Design blends astrology, Kabbalah, chakras and quantum physics. From your birth date and time you get your energy type, authority and strategy, plus your profile.',
+      he: 'עיצוב אנושי הוא כלי רוחני להתבוננות עצמית. לפי תאריך לידה ושעה מוצגים סוג האנרגיה, האסטרטגיה, הסמכות והפרופיל, כפי שהמערכת מפרשת אותם. זו אינה מדידה מדעית.',
+      en: 'Human Design is a spiritual tool for self-reflection. From a birth date and time it shows an energy type, strategy, authority and profile, as the system interprets them. It is not a scientific measurement.',
     },
     facts: [
       { he: '5 סוגי אנרגיה', en: '5 energy types' },
@@ -152,9 +152,9 @@ export const PAGE_INFO: Record<PageKey, PageInfo> = {
       { he: '12 פרופילים', en: '12 profiles' },
     ],
     more: [
-      { title: { he: 'מה זה Human Design?', en: 'What is Human Design?' }, text: { he: 'מערכת שפותחה בשנות ה-80 על ידי ראה בשם רא הורוביץ. היא משלבת אסטרולוגיה (מיקום הפלנטות), קבלה (עץ החיים), צ\'אקרות הינדיות, ו"מטריקס קוונטית" בעל הממדים 64×64. התוצאה היא מפה אישית של איך אתה "עוצב" לעבודה בעולם.', en: 'A system developed in the 1980s by a visionary named Ra Uru Hu. It blends astrology (planetary positions), Kabbalah (Tree of Life), Indian chakras and a "quantum matrix" of 64×64 dimensions. The result is a personal map of how you are "designed" to operate in the world.' } },
+      { title: { he: 'מה זה Human Design?', en: 'What is Human Design?' }, text: { he: 'מערכת רוחנית שפותחה בשנות ה-80. היא שואבת רעיונות ממסורות שונות, בהן אסטרולוגיה, קבלה וצ\'אקרות. אין בסיס מדעי מבוסס לכך שהיא מודדת אישיות, מחליטה עבור אדם או חוזה התנהגות.', en: 'A spiritual system developed in the 1980s. It draws on several traditions, including astrology, Kabbalah and chakras. There is no established scientific basis for it measuring personality, deciding for a person, or predicting behavior.' } },
       { title: { he: 'סוגי אנרגיה', en: 'Energy types' }, text: { he: 'חמישה סוגים: מניפסטור (יוזם), גנרטור (בונה), גנרטור-מניפסטור (יוזם-בונה), פרוג\'קטור (מדריך), רפלקטור (מראה). כל סוג בעל אסטרטגיה משלו לקבלת החלטות.', en: 'Five types: Manifestor (initiator), Generator (builder), Manifesting Generator (fast builder), Projector (guide) and Reflector (mirror). Each has its own strategy for decision-making.' } },
-      { title: { he: 'רשויות החלטה', en: 'Decision authorities' }, text: { he: 'בנוסף לאסטרטגיה, יש לך "רשות" - מנגנון תוך-נפשי שאומר לך בוודאות אם משהו נכון בשבילך. רשויות: רגשית, סקרלית, טחולית (אינטואיציה), אגו, עצמית, או חוכמה אלוהית (לא קיימת).', en: 'Beyond your strategy, you have an "authority"—an inner mechanism that tells you with certainty if something is right for you. Authorities: emotional, sacral, splenic (intuition), ego, self, or divine wisdom (none).' } },
+      { title: { he: 'רשויות החלטה', en: 'Decision authorities' }, text: { he: 'לפי המערכת, לצד האסטרטגיה יש "סמכות": אופן שבו נהוג לבדוק החלטה. השמות משתנים בין מקורות. כאן: רגשית, סקרלית, טחולית, אגו, עצמית, או סמכות ירחית.', en: 'In this system, alongside strategy there is an "authority": a way decisions are usually checked. Names vary between sources. Here: emotional, sacral, splenic, ego, self-projected, or lunar.' } },
       { title: { he: 'פרופילים', en: 'Profiles' }, text: { he: 'שתים-עשרה פרופילים המתארים את תפקידך החברתי ודרכך בחיים. כל פרופיל הוא שילוב של שני מספרים (1–6) המייצגים שני מימדים של האישיות.', en: 'Twelve profiles that describe your social role and life path. Each profile is a blend of two numbers (1–6) representing two dimensions of personality.' } },
     ],
   },

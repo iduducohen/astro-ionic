@@ -8,7 +8,7 @@
 import {
   ELEMENTS, NUMBER_MEANINGS, ZODIAC, chineseScore, elementScore, numberScore, reduceNumber,
   type Element, type L, type Lang, type Profile, type ZodiacSign,
-} from './astro.ts';
+} from './astro';
 
 export type Group = 'western' | 'hebrew' | 'chinese' | 'numbers';
 export interface Param { group: Group; key: string; label: L; detail: L; score: number; text: L }

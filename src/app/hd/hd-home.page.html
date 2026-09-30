@@ -1,0 +1,48 @@
+<app-intro page="hd" [heading]="t('עיצוב אנושי', 'Human Design')"></app-intro>
+
+@if (!charts.ready()) {
+  <p class="hd-lead">{{ t('טוען את המפה…', 'Loading the chart…') }}</p>
+} @else if (charts.chart(); as chart) {
+  @if (users.profile().name) {
+    <p class="hd-hello">{{ t('שלום,', 'Hello,') }} {{ users.profile().name }}</p>
+  }
+  <h2 class="hd-title">{{ t('המפה האישית שלך', 'Your personal chart') }}</h2>
+  <div class="hd-cards">
+    <article class="hd-card">
+      <h3>{{ t('סוג', 'Type') }}</h3>
+      <p class="hd-value">{{ text(chart.typeName) }}</p>
+      <p>{{ text(chart.typeRole) }}</p>
+      <a routerLink="/hd/type">{{ t('למדו עוד', 'Learn more') }}</a>
+    </article>
+    <article class="hd-card">
+      <h3>{{ t('אסטרטגיה', 'Strategy') }}</h3>
+      <p class="hd-value">{{ text(chart.strategy) }}</p>
+      <p>{{ t('לפי המערכת, כך נהוג לפעול עם הסוג הזה.', 'In this system, this is how that type is usually said to act.') }}</p>
+      <a routerLink="/hd/strategy">{{ t('למדו עוד', 'Learn more') }}</a>
+    </article>
+    <article class="hd-card">
+      <h3>{{ t('סמכות', 'Authority') }}</h3>
+      <p class="hd-value">{{ text(chart.authorityName) }}</p>
+      <p>{{ t('לפי המערכת, כך נהוג לבדוק החלטה.', 'In this system, this is how a decision is usually checked.') }}</p>
+      <a routerLink="/hd/authority">{{ t('למדו עוד', 'Learn more') }}</a>
+    </article>
+    <article class="hd-card">
+      <h3>{{ t('פרופיל', 'Profile') }}</h3>
+      <p class="hd-value">{{ text(chart.profileLabel) }}</p>
+      <p>{{ t('שילוב של שני קווים. אין פרופיל שנכון יותר מאחרים.', 'A pair of lines. No profile is more correct than another.') }}</p>
+      <a routerLink="/hd/profile">{{ t('למדו עוד', 'Learn more') }}</a>
+    </article>
+  </div>
+} @else {
+  <section class="hd-empty">
+    <h2>{{ t('גלו את המפה האישית שלכם', 'Discover your personal chart') }}</h2>
+    <p>{{ t('Human Design הוא כלי להתבוננות עצמית המבוסס על מערכת המשלבת מספר מסורות ורעיונות.', 'Human Design is a self-reflection tool based on a system that brings together several traditions and ideas.') }}</p>
+    <ol class="hd-steps">
+      <li>{{ t('מזינים פרטי לידה', 'Enter birth details') }}</li>
+      <li>{{ t('נוצרת המפה האישית', 'A personal chart is created') }}</li>
+      <li>{{ t('בודקים את הסוג, הסמכות והפרופיל', 'Explore type, authority and profile') }}</li>
+    </ol>
+    <p class="hd-note">{{ t('הפרטים נשמרים במכשיר בלבד. Human Design אינה מדידה מדעית ואינה אבחון.', 'Details stay on this device. Human Design is not a scientific measurement and not a diagnosis.') }}</p>
+    <ion-button routerLink="/hd/birth" expand="block" class="btn-main">{{ t('התחילו עכשיו', 'Start now') }}</ion-button>
+  </section>
+}

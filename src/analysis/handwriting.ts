@@ -27,6 +27,26 @@ export interface Measured {
   lines: number;
 }
 
+/** תיקון ידני עתידי. המדידה נשארת, והמסך יכול לדרוס רק את הערך שהמשתמש שינה. */
+export interface TraitOverrides {
+  slant?: Slant;
+  pressure?: Pressure;
+  size?: Size;
+  baseline?: Baseline;
+  spacing?: Spacing;
+}
+
+export function applyOverrides(measured: Measured, overrides: TraitOverrides = {}): Measured {
+  return {
+    slant: { ...measured.slant, value: overrides.slant ?? measured.slant.value },
+    pressure: { ...measured.pressure, value: overrides.pressure ?? measured.pressure.value },
+    size: { ...measured.size, value: overrides.size ?? measured.size.value },
+    baseline: { ...measured.baseline, value: overrides.baseline ?? measured.baseline.value },
+    spacing: { ...measured.spacing, value: overrides.spacing ?? measured.spacing.value },
+    lines: measured.lines,
+  };
+}
+
 const MAX_W = 900;
 
 function loadImage(src: string): Promise<HTMLImageElement> {

@@ -2,7 +2,7 @@
  * tarot.ts — 22 קלפי הארקנה הגדולה, משיכה אקראית וקלף לידה.
  * ההקבלות האסטרולוגיות לפי מסורת "השחר המוזהב" (Golden Dawn).
  */
-import type { L } from './astro.ts';
+import type { L } from './astro';
 
 export interface TarotCard {
   n: number;          // 0–21

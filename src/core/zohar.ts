@@ -3,9 +3,9 @@
  * כל מאפיין שנבחר מצביע על יסוד (אש/אוויר/מים/עפר) ומוסיף פירוש משלו.
  * היסוד הדומיננטי קובע את המזג; צורת הפנים — את הספירה; השם ושם האם — את "שורש הנשמה".
  */
-import type { L } from './astro.ts';
-import { nameNumber, reduceNumber } from './astro.ts';
-import { sephira, sephiraForNumber } from './tree.ts';
+import type { L } from './astro';
+import { nameNumber, reduceNumber } from './astro';
+import { sephira, sephiraForNumber } from './tree';
 
 export type El = 'fire' | 'air' | 'water' | 'earth';
 export interface Opt { id: string; label: L; el?: El; text: L }

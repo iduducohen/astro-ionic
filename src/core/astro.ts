@@ -3,7 +3,7 @@
  * ללא תלויות חיצוניות: לוח עברי וסיני מחושבים דרך Intl של הדפדפן.
  * כל טקסט תוכן מוגדר כ-L = { he, en } ומתורגם בשכבת התצוגה עם tr().
  */
-import { birthCard, type TarotCard } from './tarot.ts';
+import { birthCard, type TarotCard } from './tarot';
 
 export type Lang = 'he' | 'en';
 export interface L { he: string; en: string }
@@ -20,10 +20,10 @@ export const ELEMENTS: Record<Element, L> = {
 };
 
 export const ELEMENT_DESCRIPTIONS: Record<Element, L> = {
-  fire: { he: 'אנרגיה, התלהבות וכוח מניע טבעי. דינמי ויצור.', en: 'Energy, enthusiasm and natural drive. Dynamic and creative.' },
-  earth: { he: 'יציבות, מעשיות וקשור למציאות. בנאי וביטחוני.', en: 'Stability, practicality and grounded reality. Builder and secure.' },
-  air: { he: 'תקשורת, דעות וחופש רוח. בקי וגמיש.', en: 'Communication, ideas and mental freedom. Witty and adaptable.' },
-  water: { he: 'רגישות, אינטואיציה ועומק רגשי. חלזוני ורחמן.', en: 'Sensitivity, intuition and emotional depth. Intuitive and compassionate.' },
+  fire: { he: 'אש אומרת שאתה זז, מתלהב, ומתקשה לשבת ולחכות.', en: 'Fire means you move, get excited, and struggle to sit and wait.' },
+  earth: { he: 'אדמה אומרת שאתה רוצה משהו אמיתי שאפשר לבנות עליו, לא רק רעיון.', en: 'Earth means you want something real you can build on, not only an idea.' },
+  air: { he: 'אוויר אומר שאתה חי משיחה, מדעות ומחופש לחשוב.', en: 'Air means you live on conversation, opinions and the freedom to think.' },
+  water: { he: 'מים אומרים שאתה מרגיש את האנשים סביבך, לפעמים לפני שהם דיברו.', en: 'Water means you feel the people around you, sometimes before they have spoken.' },
 };
 
 export const MODALITIES: Record<Modality, L> = {
@@ -33,9 +33,9 @@ export const MODALITIES: Record<Modality, L> = {
 };
 
 export const MODALITY_DESCRIPTIONS: Record<Modality, L> = {
-  cardinal: { he: 'מתחיל, יוזם ויוצר שינוי. אנשים של פעולה.', en: 'Initiator, pioneer and catalyst for change. People of action.' },
-  fixed: { he: 'קבוע, עמוד ומחזיק מעמד. אנשים של יציבות.', en: 'Stable, loyal and holds steady. People of stability.' },
-  mutable: { he: 'גמיש, משתנה ומסתגל. אנשים של הסתגלות.', en: 'Flexible, changeable and adaptable. People of adaptation.' },
+  cardinal: { he: 'אתה מהאנשים שמתחילים. כשמשהו תקוע, אתה זז ראשון.', en: 'You are someone who starts things. When something is stuck, you move first.' },
+  fixed: { he: 'אחרי שבחרת כיוון, אתה נשאר בו. קשה להזיז אותך.', en: 'Once you pick a direction, you stay with it. You are hard to move.' },
+  mutable: { he: 'אתה מסתגל. כשהמצב משתנה, אתה משתנה איתו.', en: 'You adapt. When the situation changes, you change with it.' },
 };
 
 export interface ZodiacSign {
@@ -48,57 +48,83 @@ export interface ZodiacSign {
   to: [number, number];
   traits: L[];
   text: L;
+  /** פסקה שנייה, בשפה יומיומית */
+  more: L;
 }
 
 export const ZODIAC: ZodiacSign[] = [
   { id: 'aries', name: { he: 'טלה', en: 'Aries' }, symbol: '♈', element: 'fire', ruler: { he: 'מאדים', en: 'Mars' }, from: [3, 21], to: [4, 19],
     traits: [{ he: 'יוזם', en: 'Driven' }, { he: 'אמיץ', en: 'Brave' }, { he: 'חסר סבלנות', en: 'Impatient' }],
     text: { he: 'הראשון לקפוץ למים. אנרגיה של התחלות, תחרותיות בריאה ויכולת לסחוף אחרים — כל עוד לא צריך לחכות יותר מדי.',
-            en: 'First to jump in. The energy of beginnings, healthy competitiveness and a knack for rallying others — as long as nobody makes you wait.' } },
+            en: 'First to jump in. The energy of beginnings, healthy competitiveness and a knack for rallying others — as long as nobody makes you wait.' },
+    more: { he: 'כשיש משהו חדש, אתה שם לפני כולם. קשה לך לחכות בתור או לשמוע "אחר כך". אתה מושך אנשים קדימה, ומתעייף כשהעניין כבר לא חדש.',
+            en: 'When something is new, you are there before everyone else. Waiting in line or hearing "later" wears you out. You pull people forward, and you tire once it is no longer new.' } },
   { id: 'taurus', name: { he: 'שור', en: 'Taurus' }, symbol: '♉', element: 'earth', ruler: { he: 'נוגה', en: 'Venus' }, from: [4, 20], to: [5, 20],
     traits: [{ he: 'יציב', en: 'Steady' }, { he: 'נאמן', en: 'Loyal' }, { he: 'עקשן', en: 'Stubborn' }],
     text: { he: 'בונה לאט ובונה טוב. אוהב נוחות, אוכל טוב ודברים שמחזיקים מעמד, וכמעט אי אפשר להזיז אותו מעמדה שבחר.',
-            en: 'Builds slowly and builds well. Loves comfort, good food and things that last, and almost never moves from a position once taken.' } },
+            en: 'Builds slowly and builds well. Loves comfort, good food and things that last, and almost never moves from a position once taken.' },
+    more: { he: 'אתה לא ממהר להחליט, אבל החלטה שלך נשארת. נוח לך עם שגרה, אוכל טוב ובית שנעים להיות בו. מי שמנסה לדחוף אותך מהר נתקל בקיר.',
+            en: 'You do not decide in a hurry, but a decision of yours stays. You are at ease with routine, good food and a home that feels good. Anyone who pushes you too fast hits a wall.' } },
   { id: 'gemini', name: { he: 'תאומים', en: 'Gemini' }, symbol: '♊', element: 'air', ruler: { he: 'כוכב חמה', en: 'Mercury' }, from: [5, 21], to: [6, 20],
     traits: [{ he: 'סקרן', en: 'Curious' }, { he: 'שנון', en: 'Witty' }, { he: 'משתנה', en: 'Restless' }],
     text: { he: 'ראש שעובד בכמה ערוצים במקביל. מתחבר מהר לאנשים ולרעיונות, ומשתעמם מהר באותה מידה.',
-            en: 'A mind running on several channels at once. Connects quickly with people and ideas, and gets bored just as quickly.' } },
+            en: 'A mind running on several channels at once. Connects quickly with people and ideas, and gets bored just as quickly.' },
+    more: { he: 'שיחה היא הבית שלך. אתה קופץ מרעיון לרעיון ומאנשים לאנשים, וצריך גיוון כדי לא להירדם. אותו יום, אותו מסלול, אותם אנשים — ואתה כבר מחפש דלת.',
+            en: 'Conversation is home. You jump from idea to idea and from person to person, and you need variety or you fall asleep. The same day, the same route, the same people, and you are already looking for a door.' } },
   { id: 'cancer', name: { he: 'סרטן', en: 'Cancer' }, symbol: '♋', element: 'water', ruler: { he: 'ירח', en: 'the Moon' }, from: [6, 21], to: [7, 22],
     traits: [{ he: 'רגיש', en: 'Sensitive' }, { he: 'מגונן', en: 'Protective' }, { he: 'זוכר הכל', en: 'Never forgets' }],
     text: { he: 'הבית והאנשים הקרובים הם מרכז העולם. קליפה קשה מבחוץ, רכות גדולה מבפנים וזיכרון רגשי ארוך.',
-            en: 'Home and close people are the center of the world. A hard shell outside, great softness inside, and a long emotional memory.' } },
+            en: 'Home and close people are the center of the world. A hard shell outside, great softness inside, and a long emotional memory.' },
+    more: { he: 'מי שבפנים אצלך מקבל הגנה. מי שבחוץ רואה קודם זהירות. אתה זוכר מי היה שם בשבילך, וגם מי לא. מקום בטוח — בית, מטבח, כמה אנשים — זה מה שמייצב אותך.',
+            en: 'The people inside your circle get protection. Everyone else meets caution first. You remember who showed up for you, and who did not. A safe place, a home, a few people: that is what steadies you.' } },
   { id: 'leo', name: { he: 'אריה', en: 'Leo' }, symbol: '♌', element: 'fire', ruler: { he: 'שמש', en: 'the Sun' }, from: [7, 23], to: [8, 22],
     traits: [{ he: 'נדיב', en: 'Generous' }, { he: 'כריזמטי', en: 'Charismatic' }, { he: 'גאה', en: 'Proud' }],
     text: { he: 'נולד לבמה. חם, נדיב ומוביל באופן טבעי, ומצפה — בצדק, לדעתו — לקצת הכרה בתמורה.',
-            en: 'Born for the stage. Warm, generous and a natural leader, who expects — rightly, in their view — a little recognition in return.' } },
+            en: 'Born for the stage. Warm, generous and a natural leader, who expects — rightly, in their view — a little recognition in return.' },
+    more: { he: 'אתה נותן בגדול: זמן, כסף, תשומת לב. ואתה רוצה שיראו את זה. בלי הכרה אתה נעלב, לא כי אתה ריק, אלא כי הנתינה שלך אמיתית. כשמוקירים אותך, אתה מאיר על כולם.',
+            en: 'You give in a big way: time, money, attention. And you want that seen. Without recognition you are hurt, not because you are empty, but because the giving is real. When people appreciate you, you light up the room.' } },
   { id: 'virgo', name: { he: 'בתולה', en: 'Virgo' }, symbol: '♍', element: 'earth', ruler: { he: 'כוכב חמה', en: 'Mercury' }, from: [8, 23], to: [9, 22],
     traits: [{ he: 'מדויק', en: 'Precise' }, { he: 'מעשי', en: 'Practical' }, { he: 'ביקורתי', en: 'Critical' }],
     text: { he: 'רואה את הפרט שכולם פספסו. אוהב סדר, שיפור מתמיד ועזרה אמיתית, ולפעמים מחמיר בעיקר עם עצמו.',
-            en: 'Spots the detail everyone else missed. Loves order, constant improvement and being genuinely useful — and is hardest on themselves.' } },
+            en: 'Spots the detail everyone else missed. Loves order, constant improvement and being genuinely useful — and is hardest on themselves.' },
+    more: { he: 'אתה שואל "איך עושים את זה יותר טוב?" גם כשכולם כבר מרוצים. עזרה בשבילך היא מעשה, לא מילה. הביקורת הכי חדה מופנית אליך, לא לאחרים, ושווה לזכור שגם "מספיק טוב" הוא הישג.',
+            en: 'You ask "how do we do this better?" even when everyone else is already satisfied. Help, for you, is an action, not a sentence. The sharpest criticism is aimed at yourself, and "good enough" is also an achievement.' } },
   { id: 'libra', name: { he: 'מאזניים', en: 'Libra' }, symbol: '♎', element: 'air', ruler: { he: 'נוגה', en: 'Venus' }, from: [9, 23], to: [10, 22],
     traits: [{ he: 'הוגן', en: 'Fair' }, { he: 'אסתטי', en: 'Refined' }, { he: 'מתלבט', en: 'Indecisive' }],
     text: { he: 'מחפש איזון בכל דבר — ביחסים, בעיצוב ובוויכוחים. דיפלומט מלידה שמתקשה לבחור בין שתי אפשרויות טובות.',
-            en: 'Seeks balance in everything — relationships, design, arguments. A born diplomat who struggles to choose between two good options.' } },
+            en: 'Seeks balance in everything — relationships, design, arguments. A born diplomat who struggles to choose between two good options.' },
+    more: { he: 'אנשים חשובים לך, ואתה משתדל שאף אחד לא ייצא פגוע. יש לך עין ליופי: איך חדר נראה, איך בגדים יושבים, איך שיחה נשמעת. כשצריך להחליט לבד, בלי לשמוע עוד דעה, שם אתה מתעכב. שווה לבחור גם כששתי האפשרויות טובות.',
+            en: 'People matter to you, and you try to keep anyone from leaving hurt. You have an eye for how a room looks, how clothes sit, how a conversation sounds. Deciding alone, without one more opinion, is where you stall. It is worth choosing even when both options are good.' } },
   { id: 'scorpio', name: { he: 'עקרב', en: 'Scorpio' }, symbol: '♏', element: 'water', ruler: { he: 'פלוטו ומאדים', en: 'Pluto and Mars' }, from: [10, 23], to: [11, 21],
     traits: [{ he: 'עמוק', en: 'Deep' }, { he: 'נחוש', en: 'Determined' }, { he: 'חשדן', en: 'Guarded' }],
     text: { he: 'הכל או כלום. אינטנסיבי, חד אבחנה ונאמן עד הסוף — וזוכר היטב גם מי לא היה נאמן לו.',
-            en: 'All or nothing. Intense, perceptive and loyal to the end — and remembers exactly who was not loyal back.' } },
+            en: 'All or nothing. Intense, perceptive and loyal to the end — and remembers exactly who was not loyal back.' },
+    more: { he: 'אתה לא עושה חצי. קשר, עבודה או סוד — או שאתה בפנים עד הסוף, או שלא. אתה קולט מה אנשים מסתירים, ולכן לא ממהר לתת אמון. מי שקיבל אותו מקבל נאמנות נדירה.',
+            en: 'You do not do things halfway. A relationship, a job, a secret: you are all in, or you are out. You notice what people hide, so trust comes slowly. The person who earns it gets a rare kind of loyalty.' } },
   { id: 'sagittarius', name: { he: 'קשת', en: 'Sagittarius' }, symbol: '♐', element: 'fire', ruler: { he: 'צדק', en: 'Jupiter' }, from: [11, 22], to: [12, 21],
     traits: [{ he: 'אופטימי', en: 'Optimistic' }, { he: 'הרפתקן', en: 'Adventurous' }, { he: 'ישיר', en: 'Blunt' }],
     text: { he: 'תמיד בדרך למקום הבא. אוהב חופש, רעיונות גדולים ואמת בלי פילטרים, גם כשהיא לא הכי נעימה.',
-            en: 'Always on the way to the next place. Loves freedom, big ideas and unfiltered truth, even when it is not the nicest thing to hear.' } },
+            en: 'Always on the way to the next place. Loves freedom, big ideas and unfiltered truth, even when it is not the nicest thing to hear.' },
+    more: { he: 'כלוב, גם נוח, סוגר לך את הנשימה. אתה צריך אופק: נסיעה, לימוד, רעיון גדול. אתה אומר את האמת ישר, ולפעמים שוכח שהצד השני עוד לא מוכן לשמוע אותה.',
+            en: 'A cage, even a comfortable one, cuts off your breath. You need a horizon: a trip, a study, a big idea. You say the truth straight, and sometimes forget the other person is not ready to hear it yet.' } },
   { id: 'capricorn', name: { he: 'גדי', en: 'Capricorn' }, symbol: '♑', element: 'earth', ruler: { he: 'שבתאי', en: 'Saturn' }, from: [12, 22], to: [1, 19],
     traits: [{ he: 'שאפתן', en: 'Ambitious' }, { he: 'אחראי', en: 'Responsible' }, { he: 'מאופק', en: 'Reserved' }],
     text: { he: 'מטפס בסבלנות לפסגה. חושב לטווח ארוך, לוקח אחריות ברצינות ומגלה הומור יבש רק למי שמכיר אותו.',
-            en: 'Climbs patiently to the top. Thinks long-term, takes responsibility seriously and reveals a dry sense of humor only to those who know them.' } },
+            en: 'Climbs patiently to the top. Thinks long-term, takes responsibility seriously and reveals a dry sense of humor only to those who know them.' },
+    more: { he: 'אתה לא מחפש מחיאות כפיים השבוע. אתה בונה משהו שיחזיק בעוד עשר שנים. האחריות נוחתת עליך כי אתה לא מפיל אותה. מי שמכיר אותך מקרוב מגלה שמתחת לרצינות יש הומור יבש.',
+            en: 'You are not looking for applause this week. You are building something that will still stand in ten years. Responsibility lands on you because you do not drop it. People who know you well find a dry humor under the seriousness.' } },
   { id: 'aquarius', name: { he: 'דלי', en: 'Aquarius' }, symbol: '♒', element: 'air', ruler: { he: 'אורנוס ושבתאי', en: 'Uranus and Saturn' }, from: [1, 20], to: [2, 18],
     traits: [{ he: 'מקורי', en: 'Original' }, { he: 'עצמאי', en: 'Independent' }, { he: 'חברתי', en: 'Social' }],
     text: { he: 'חושב אחרת בכוונה. חבר של כולם אבל שומר מרחק, ומתלהב יותר מרעיונות שמשנים את העולם מאשר מדרמות קטנות.',
-            en: 'Thinks differently on purpose. Friends with everyone yet keeps a little distance, and cares more about world-changing ideas than small dramas.' } },
+            en: 'Thinks differently on purpose. Friends with everyone yet keeps a little distance, and cares more about world-changing ideas than small dramas.' },
+    more: { he: 'אתה יכול להיות בחבורה ועדיין להרגיש צופה מהצד. רעיונות גדולים מדליקים אותך יותר מרכילות. חוקים שמורים "ככה עושים" בלי סיבה מגרדים לך, ואתה מחפש דרך אחרת.',
+            en: 'You can be in the group and still feel like you are watching from the side. Big ideas light you up more than gossip. A rule that exists only because "that is how it is done" itches, and you look for another way.' } },
   { id: 'pisces', name: { he: 'דגים', en: 'Pisces' }, symbol: '♓', element: 'water', ruler: { he: 'נפטון וצדק', en: 'Neptune and Jupiter' }, from: [2, 19], to: [3, 20],
     traits: [{ he: 'חולמני', en: 'Dreamy' }, { he: 'אמפתי', en: 'Empathetic' }, { he: 'אינטואיטיבי', en: 'Intuitive' }],
     text: { he: 'קולט את מצב הרוח בחדר לפני שמישהו דיבר. יצירתי, רך ורוחני, וצריך מדי פעם לברוח קצת מהמציאות.',
-            en: 'Reads the mood of a room before anyone speaks. Creative, gentle and spiritual, and needs to escape reality now and then.' } },
+            en: 'Reads the mood of a room before anyone speaks. Creative, gentle and spiritual, and needs to escape reality now and then.' },
+    more: { he: 'אתה סופג את מה שאחרים מרגישים, ולכן עייפות אצלך היא לא תמיד שלך. אמנות, מוזיקה, שקט או ים מחזירים אותך אליך. בלי מקום לברוח אליו לכמה שעות, העולם נהיה רועש מדי.',
+            en: 'You absorb what other people feel, so your tiredness is not always yours. Art, music, quiet or the sea bring you back to yourself. Without a few hours to slip away, the world gets too loud.' } },
 ];
 
 function inRange(md: number, from: [number, number], to: [number, number]): boolean {
@@ -360,58 +386,58 @@ export const DECANS: Record<string, Decan[]> = {
   ],
   taurus: [
     { number: 1, range: { he: '0°-10°', en: '0°-10°' }, ruler: { he: 'נוגה', en: 'Venus' }, text: { he: 'עדינות ויופי. אהבה למנוחה.', en: 'Refinement and beauty. Love of comfort.' } },
-    { number: 2, range: { he: '10°-20°', en: '10°-20°' }, ruler: { he: 'מרקוריוס', en: 'Mercury' }, text: { he: 'שכל מעשי וכישרון. רציונלי ויצור.', en: 'Practical mind and skill. Rational and creative.' } },
+    { number: 2, range: { he: '10°-20°', en: '10°-20°' }, ruler: { he: 'מרקוריוס', en: 'Mercury' }, text: { he: 'שכל מעשי וכישרון. רציונלי וגם יצירתי.', en: 'Practical mind and skill. Rational and creative.' } },
     { number: 3, range: { he: '20°-30°', en: '20°-30°' }, ruler: { he: 'שבתאי', en: 'Saturn' }, text: { he: 'משמעת וגבולות. אחראי וזהיר.', en: 'Discipline and boundaries. Responsible and cautious.' } },
   ],
   gemini: [
-    { number: 1, range: { he: '0°-10°', en: '0°-10°' }, ruler: { he: 'מרקוריוס', en: 'Mercury' }, text: { he: 'תקשורת וסקרנות. שקוף וחזק.', en: 'Communication and curiosity. Witty and sharp.' } },
-    { number: 2, range: { he: '10°-20°', en: '10°-20°' }, ruler: { he: 'נוגה', en: 'Venus' }, text: { he: 'קסם חברתי. אהוב וחיבוביות.', en: 'Social charm. Popular and likeable.' } },
+    { number: 1, range: { he: '0°-10°', en: '0°-10°' }, ruler: { he: 'מרקוריוס', en: 'Mercury' }, text: { he: 'תקשורת וסקרנות. חד ושנון.', en: 'Communication and curiosity. Witty and sharp.' } },
+    { number: 2, range: { he: '10°-20°', en: '10°-20°' }, ruler: { he: 'נוגה', en: 'Venus' }, text: { he: 'קסם חברתי. אהוב וקל להתחבר אליו.', en: 'Social charm. Popular and likeable.' } },
     { number: 3, range: { he: '20°-30°', en: '20°-30°' }, ruler: { he: 'אורנוס', en: 'Uranus' }, text: { he: 'מקוריות וחדשנות. חושב אחרת.', en: 'Originality and innovation. Thinks differently.' } },
   ],
   cancer: [
     { number: 1, range: { he: '0°-10°', en: '0°-10°' }, ruler: { he: 'ירח', en: 'Moon' }, text: { he: 'רגישות וחיבור רגשי עמוק. מוגן.', en: 'Sensitivity and deep emotional connection. Protected.' } },
     { number: 2, range: { he: '10°-20°', en: '10°-20°' }, ruler: { he: 'מרקוריוס', en: 'Mercury' }, text: { he: 'דעות מעמיקות. חוקר רגשות.', en: 'Thoughtful perspective. Explores emotions.' } },
-    { number: 3, range: { he: '20°-30°', en: '20°-30°' }, ruler: { he: 'פישה', en: 'Pluto' }, text: { he: 'עוצמה נסתרת. יצירה מעמוקה.', en: 'Hidden power. Deep transformation.' } },
+    { number: 3, range: { he: '20°-30°', en: '20°-30°' }, ruler: { he: 'פלוטו', en: 'Pluto' }, text: { he: 'עוצמה נסתרת. שינוי שבא מבפנים.', en: 'Hidden power. Deep transformation.' } },
   ],
   leo: [
-    { number: 1, range: { he: '0°-10°', en: '0°-10°' }, ruler: { he: 'שמש', en: 'Sun' }, text: { he: 'מלוכה טבעית. קורינג וברור.', en: 'Natural royalty. Shining and clear.' } },
+    { number: 1, range: { he: '0°-10°', en: '0°-10°' }, ruler: { he: 'שמש', en: 'Sun' }, text: { he: 'מלוכה טבעית. מאיר וברור.', en: 'Natural royalty. Shining and clear.' } },
     { number: 2, range: { he: '10°-20°', en: '10°-20°' }, ruler: { he: 'צדק', en: 'Jupiter' }, text: { he: 'נדיבות ותרבות גבוהה. מתון ונעים.', en: 'Generosity and refinement. Gracious and pleasant.' } },
-    { number: 3, range: { he: '20°-30°', en: '20°-30°' }, ruler: { he: 'מאדים', en: 'Mars' }, text: { he: 'שליטה ותחרותיות. רודף כוח וזקיף.', en: 'Dominance and competitive. Seeks power and status.' } },
+    { number: 3, range: { he: '20°-30°', en: '20°-30°' }, ruler: { he: 'מאדים', en: 'Mars' }, text: { he: 'שליטה ותחרותיות. שואף להשפעה ולמקום בולט.', en: 'Dominance and competitive. Seeks power and status.' } },
   ],
   virgo: [
     { number: 1, range: { he: '0°-10°', en: '0°-10°' }, ruler: { he: 'מרקוריוס', en: 'Mercury' }, text: { he: 'אנליזה חדה וביקורת. מדויק ומחושב.', en: 'Sharp analysis and criticism. Precise and calculated.' } },
-    { number: 2, range: { he: '10°-20°', en: '10°-20°' }, ruler: { he: 'שבתאי', en: 'Saturn' }, text: { he: 'משמעת וסדר. עצמאי ודומה.', en: 'Discipline and order. Independent and reliable.' } },
+    { number: 2, range: { he: '10°-20°', en: '10°-20°' }, ruler: { he: 'שבתאי', en: 'Saturn' }, text: { he: 'משמעת וסדר. עצמאי ואפשר לסמוך עליו.', en: 'Discipline and order. Independent and reliable.' } },
     { number: 3, range: { he: '20°-30°', en: '20°-30°' }, ruler: { he: 'נוגה', en: 'Venus' }, text: { he: 'עדינות וחסכנות. איכותי ויפה.', en: 'Refinement and practicality. Quality and grace.' } },
   ],
   libra: [
-    { number: 1, range: { he: '0°-10°', en: '0°-10°' }, ruler: { he: 'נוגה', en: 'Venus' }, text: { he: 'גן וטעם. אסתטי וזקוק לאיזון.', en: 'Grace and taste. Aesthetic and needs balance.' } },
-    { number: 2, range: { he: '10°-20°', en: '10°-20°' }, ruler: { he: 'אורנוס', en: 'Uranus' }, text: { he: 'רעיונות מקוריים. חופשי ופעמים לא מצופה.', en: 'Original ideas. Free-thinking and sometimes unconventional.' } },
-    { number: 3, range: { he: '20°-30°', en: '20°-30°' }, ruler: { he: 'מרקוריוס', en: 'Mercury' }, text: { he: 'אינטליגנציה וקחברה. דיוקי מילים טובים.', en: 'Intelligence and sociability. Good with words.' } },
+    { number: 1, range: { he: '0°-10°', en: '0°-10°' }, ruler: { he: 'נוגה', en: 'Venus' }, text: { he: 'חן וטעם. אסתטי וזקוק לאיזון.', en: 'Grace and taste. Aesthetic and needs balance.' } },
+    { number: 2, range: { he: '10°-20°', en: '10°-20°' }, ruler: { he: 'אורנוס', en: 'Uranus' }, text: { he: 'רעיונות מקוריים. חופשי, ולפעמים מפתיע.', en: 'Original ideas. Free-thinking and sometimes unconventional.' } },
+    { number: 3, range: { he: '20°-30°', en: '20°-30°' }, ruler: { he: 'מרקוריוס', en: 'Mercury' }, text: { he: 'חכם וחברתי. יודע לדייק במילים.', en: 'Intelligence and sociability. Good with words.' } },
   ],
   scorpio: [
-    { number: 1, range: { he: '0°-10°', en: '0°-10°' }, ruler: { he: 'מאדים', en: 'Mars' }, text: { he: 'עוצמה וסדר מעש. נחוש ודרוך.', en: 'Intensity and drive. Determined and forceful.' } },
-    { number: 2, range: { he: '10°-20°', en: '10°-20°' }, ruler: { he: 'פישה', en: 'Pluto' }, text: { he: 'שינוי עמוק ויכול קוקי מחשבתי.', en: 'Deep transformation and psychological insight.' } },
-    { number: 3, range: { he: '20°-30°', en: '20°-30°' }, ruler: { he: 'שבתאי', en: 'Saturn' }, text: { he: 'תיתור ושימור מסוגל. אוקף שקט שטום.', en: 'Tradition and inner strength. Quiet resilience.' } },
+    { number: 1, range: { he: '0°-10°', en: '0°-10°' }, ruler: { he: 'מאדים', en: 'Mars' }, text: { he: 'עוצמה ודחף. נחוש ולא מוותר.', en: 'Intensity and drive. Determined and forceful.' } },
+    { number: 2, range: { he: '10°-20°', en: '10°-20°' }, ruler: { he: 'פלוטו', en: 'Pluto' }, text: { he: 'שינוי עמוק והבנה של מה שמניע אנשים.', en: 'Deep transformation and psychological insight.' } },
+    { number: 3, range: { he: '20°-30°', en: '20°-30°' }, ruler: { he: 'שבתאי', en: 'Saturn' }, text: { he: 'מסורת וכוח שקט. מחזיק מעמד בלי רעש.', en: 'Tradition and inner strength. Quiet resilience.' } },
   ],
   sagittarius: [
-    { number: 1, range: { he: '0°-10°', en: '0°-10°' }, ruler: { he: 'צדק', en: 'Jupiter' }, text: { he: 'הרחבה הרפתקן. אופטימי חשוק.', en: 'Expansive and adventurous. Optimistic and eager.' } },
-    { number: 2, range: { he: '10°-20°', en: '10°-20°' }, ruler: { he: 'מאדים', en: 'Mars' }, text: { he: 'תחרות ותשוקה. פעיל וגדיר.', en: 'Competitive and passionate. Active and strong.' } },
-    { number: 3, range: { he: '20°-30°', en: '20°-30°' }, ruler: { he: 'שמש', en: 'Sun' }, text: { he: 'קורינג וגדילה. אישי וביטחון.', en: 'Shining and ambitious. Personal and confident.' } },
+    { number: 1, range: { he: '0°-10°', en: '0°-10°' }, ruler: { he: 'צדק', en: 'Jupiter' }, text: { he: 'רחב ואוהב הרפתקה. אופטימי ונמשך קדימה.', en: 'Expansive and adventurous. Optimistic and eager.' } },
+    { number: 2, range: { he: '10°-20°', en: '10°-20°' }, ruler: { he: 'מאדים', en: 'Mars' }, text: { he: 'תחרות ותשוקה. פעיל וחזק.', en: 'Competitive and passionate. Active and strong.' } },
+    { number: 3, range: { he: '20°-30°', en: '20°-30°' }, ruler: { he: 'שמש', en: 'Sun' }, text: { he: 'בולט וגדל. אישי ובטוח בעצמו.', en: 'Shining and ambitious. Personal and confident.' } },
   ],
   capricorn: [
-    { number: 1, range: { he: '0°-10°', en: '0°-10°' }, ruler: { he: 'שבתאי', en: 'Saturn' }, text: { he: 'אחריות משמעתית. שיפוטי והינו אימפרטיבי.', en: 'Disciplined responsibility. Judicious and commanding.' } },
-    { number: 2, range: { he: '10°-20°', en: '10°-20°' }, ruler: { he: 'נוגה', en: 'Venus' }, text: { he: 'אלגנציה ישמרניות. טעם פיננסי טוב.', en: 'Elegance and thrift. Good financial taste.' } },
+    { number: 1, range: { he: '0°-10°', en: '0°-10°' }, ruler: { he: 'שבתאי', en: 'Saturn' }, text: { he: 'אחריות ממושמעת. שופט היטב ויודע להוביל.', en: 'Disciplined responsibility. Judicious and commanding.' } },
+    { number: 2, range: { he: '10°-20°', en: '10°-20°' }, ruler: { he: 'נוגה', en: 'Venus' }, text: { he: 'אלגנטיות וחיסכון. טעם טוב גם בכסף.', en: 'Elegance and thrift. Good financial taste.' } },
     { number: 3, range: { he: '20°-30°', en: '20°-30°' }, ruler: { he: 'מרקוריוס', en: 'Mercury' }, text: { he: 'תבונה עסקית. חושב בטווח ארוך.', en: 'Business acumen. Long-term thinking.' } },
   ],
   aquarius: [
     { number: 1, range: { he: '0°-10°', en: '0°-10°' }, ruler: { he: 'שבתאי', en: 'Saturn' }, text: { he: 'תיאוריה מקורית. מצפון חברתי.', en: 'Original theory. Social conscience.' } },
-    { number: 2, range: { he: '10°-20°', en: '10°-20°' }, ruler: { he: 'נוגה', en: 'Venus' }, text: { he: 'ידידות טבעית וחיבה. קסום וכן סחיר.', en: 'Natural friendliness and affection. Magnetic.' } },
-    { number: 3, range: { he: '20°-30°', en: '20°-30°' }, ruler: { he: 'מרקוריוס', en: 'Mercury' }, text: { he: 'חדשנות מודעות. קול טוב לרעיונות גרויסים.', en: 'Conscious innovation. Voice for big ideas.' } },
+    { number: 2, range: { he: '10°-20°', en: '10°-20°' }, ruler: { he: 'נוגה', en: 'Venus' }, text: { he: 'ידידות טבעית וחיבה. מושך אנשים אליו.', en: 'Natural friendliness and affection. Magnetic.' } },
+    { number: 3, range: { he: '20°-30°', en: '20°-30°' }, ruler: { he: 'מרקוריוס', en: 'Mercury' }, text: { he: 'חדשנות מודעת. קול לרעיונות גדולים.', en: 'Conscious innovation. Voice for big ideas.' } },
   ],
   pisces: [
-    { number: 1, range: { he: '0°-10°', en: '0°-10°' }, ruler: { he: 'נפטון', en: 'Neptune' }, text: { he: 'אופציות ויצירתיות. חלום בעש.', en: 'Idealistic and creative. Dreamy and artistic.' } },
-    { number: 2, range: { he: '10°-20°', en: '10°-20°' }, ruler: { he: 'צדק', en: 'Jupiter' }, text: { he: 'רוחנות ונדיבות אנושית. חסדא.', en: 'Spirituality and humanitarian. Merciful.' } },
-    { number: 3, range: { he: '20°-30°', en: '20°-30°' }, ruler: { he: 'פלוטו', en: 'Pluto' }, text: { he: 'טרנספורמציה רוחנית. מסתוריות גבוה.', en: 'Spiritual transformation. Deep mysticism.' } },
+    { number: 1, range: { he: '0°-10°', en: '0°-10°' }, ruler: { he: 'נפטון', en: 'Neptune' }, text: { he: 'אידיאליסט ויצירתי. חולמני ואמנותי.', en: 'Idealistic and creative. Dreamy and artistic.' } },
+    { number: 2, range: { he: '10°-20°', en: '10°-20°' }, ruler: { he: 'צדק', en: 'Jupiter' }, text: { he: 'רוחני ונדיב. רואה את האדם שמולו.', en: 'Spirituality and humanitarian. Merciful.' } },
+    { number: 3, range: { he: '20°-30°', en: '20°-30°' }, ruler: { he: 'פלוטו', en: 'Pluto' }, text: { he: 'שינוי רוחני. מיסטיקה עמוקה.', en: 'Spiritual transformation. Deep mysticism.' } },
   ],
 };
 

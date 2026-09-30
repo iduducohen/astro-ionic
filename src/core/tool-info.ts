@@ -2,7 +2,7 @@
  * tool-info.ts — הסבר מורחב לכל אחת משבע המפות האסטרולוגיות:
  * מה זה, מה צריך, מה מקבלים, איך לקרוא, טיפ, ופרקי העמקה.
  */
-import type { L } from './astro.ts';
+import type { L } from './astro';
 
 export interface ToolInfo {
   fits: L;          // למי / מתי זה מתאים (שורה אחת לרשימה)

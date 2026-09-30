@@ -2,10 +2,10 @@
  * render.ts — הצגה משותפת: גלגל מפה ב-SVG ודוח ב-HTML.
  * האתר מכניס את זה ב-innerHTML, והאפליקציה ב-dangerouslySetInnerHTML. כל טקסט עובר escape.
  */
-import { ZODIAC } from './astro.ts';
-import { natalAspects, norm, type Chart, type Point } from './chart.ts';
-import type { Report } from './techniques.ts';
-import { POINTS } from './texts.ts';
+import { ZODIAC } from './astro';
+import { natalAspects, norm, type Chart, type Point } from './chart';
+import type { Report } from './techniques';
+import { POINTS } from './texts';
 
 export const esc = (s: string): string =>
   String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));

@@ -2,16 +2,16 @@
  * techniques.ts — שבע שיטות הניתוח. כל פונקציה מחזירה Report שכבר מתורגם לשפה המבוקשת,
  * כך שגם האתר וגם האפליקציה מציגים אותו אותו דבר (render.ts).
  */
-import { ZODIAC, ELEMENTS, type L, type Lang } from './astro.ts';
+import { ZODIAC, ELEMENTS, type L, type Lang } from './astro';
 import {
   ASPECTS, PLANET_IDS, TRADITIONAL, TRAD_RULER, buildChart, bodyLongitude, bodySpeed, crossAspects, delta, dignity,
   natalAspects, norm, refineExact, signOf, solarReturn, houseOf,
   type Aspect, type AspectId, type Chart, type PlanetId, type PointId, Astro,
-} from './chart.ts';
-import { placeById, utcToZoned, zonedToUtc } from './places.ts';
+} from './chart';
+import { placeById, utcToZoned, zonedToUtc } from './places';
 import {
   ASPECT_INFO, DIGNITY_NAME, ELEMENT_TEXT, HOUSE_DOMAIN, HOUSE_MUNDANE, MODALITY, MODALITY_OF, POINTS, SIGN_QUALITY, SIGN_STYLE,
-} from './texts.ts';
+} from './texts';
 
 /* ---------------- מודל הדוח ---------------- */
 

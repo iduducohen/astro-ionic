@@ -1,37 +1,35 @@
 # מה כתוב בכוכבים / What the stars say — אפליקציית Ionic
 
-Ionic 8 + React 18 + Vite + Capacitor 7. כל החישובים מקומיים, בלי שרת.
+Ionic Angular + Capacitor. כל החישובים מקומיים, בלי שרת. אותו פרויקט נבנה לאתר ולאפליקציות Android ו־iOS.
 
 ## הרצה
 
 ```bash
 npm install
-npm run dev        # דפדפן, http://localhost:5173
-npm test           # בדיקות לליבת החישובים (Node 22+)
+npm start          # דפדפן, http://127.0.0.1:8100
+npm test           # בדיקות יחידה
+npm run test:core  # בדיקות ליבת החישובים (Node 22+)
 ```
 
 ## בנייה לנייד
 
 ```bash
-npm run build
-npx cap add android   # או ios (דורש Xcode)
-npx cap sync
-npx cap open android
+npm run cap:sync          # build + העתקה לניטיב
+npm run android           # Android Studio
+npm run ios               # Xcode, macOS בלבד
 ```
 
-לפני פרסום, לשנות את `appId` ב־`capacitor.config.ts`.
+לפני פרסום, לשנות את `appId` ב־`capacitor.config.ts`. פתיחה ובנייה של iOS דורשות Mac עם Xcode.
 
 ## מבנה
 
-- `src/core/astro.ts` — ליבת החישובים, TypeScript טהור ללא תלויות. כל טקסט תוכן מוגדר כ־`{ he, en }`. אותו קובץ בדיוק משמש גם את גרסת האתר.
-- `src/core/i18n.ts` — מחרוזות הממשק בשתי השפות (משותף לאתר ולאפליקציה), זיהוי שפת המכשיר וכיוון.
-- `src/lang.tsx` — `LangProvider` ו־`useLang()`: שפה נוכחית, מחרוזות, החלפה ושמירה. מעדכן `lang`/`dir` על `<html>` כך ש־Ionic הופך כיוון לבד.
-- `src/pages/` — שלושה טאבים: המפה שלי, התאמה זוגית, טארוט.
+- `src/core/astro.ts` — ליבת החישובים, TypeScript טהור. כל טקסט תוכן מוגדר כ־`{ he, en }`.
+- `src/core/i18n.ts` — מחרוזות הממשק בשתי השפות, זיהוי שפה וכיוון.
+- `src/app/` — מסכי Angular ו־Ionic: המפה שלי, אסטרולוגיה, התאמה זוגית, טארוט, קבלה ועוד.
 - `src/core/tarot.ts` — 22 קלפי הארקנה הגדולה (עברית/אנגלית), משיכה אקראית וקלף לידה.
-- `src/components/TarotCard.tsx` — קלף שמתהפך בלחיצה.
-- `src/components/ZodiacWheel.tsx` — גלגל המזלות המסתובב.
-- `src/storage.ts` — שמירת הקלט האחרון דרך `@capacitor/preferences`.
-- `src/theme/variables.css` — פלטה בהירה/כהה.
+- `src/app/storage.ts` — שמירת הקלט האחרון דרך `@capacitor/preferences`.
+- `src/theme/` — פלטה בהירה/כהה.
+- `www/` — פלט הבנייה שנטען בתוך האפליקציה.
 
 ## הערות חישוב
 

@@ -1,0 +1,95 @@
+<app-screen [title]="lang.text().tabGraphology">
+  <app-intro page="graphology" [heading]="t('גרפולוגיה', 'Graphology')"></app-intro>
+  <section class="form-card graf">
+    <h2>{{ t('צילום או העלאת כתב יד', 'Photograph or upload handwriting') }}</h2>
+    <p class="graf-lead">{{ t('העלה 3–4 שורות לפחות של כתב יד ברור, שנכתבו בעט כחול או שחור על נייר לבן.', 'Upload at least 3–4 clear lines of handwriting, written with a blue or black pen on white paper.') }}</p>
+    <ul class="graf-tips">
+      <li>{{ t('לפחות 3–4 שורות של כתב יד', 'At least 3–4 lines of handwriting') }}</li>
+      <li>{{ t('עט כחול או שחור', 'Blue or black pen') }}</li>
+      <li>{{ t('נייר לבן', 'White paper') }}</li>
+      <li>{{ t('ללא שורות/משבצות', 'No lines or grids') }}</li>
+      <li>{{ t('צילום ישר מלמעלה', 'Shot straight from above') }}</li>
+      <li>{{ t('תאורה טובה', 'Good light') }}</li>
+      <li>{{ t('ללא צללים', 'No shadows') }}</li>
+      <li>{{ t('רצוי שכל אזור הכתב יהיה גלוי בתמונה', 'The whole writing area should be visible') }}</li>
+    </ul>
+    <p class="graf-note">{{ t('הניתוח הוא פרשנות גרפולוגית מסורתית. אין לו תוקף מדעי מוכח, והוא אינו אבחון אישיות.', 'The analysis is a traditional graphology reading. It has no proven scientific validity, and it is not a personality diagnosis.') }}</p>
+
+    <label class="native-field">
+      <span>{{ t('כיוון הכתיבה', 'Writing direction') }}</span>
+      <select [value]="dir" (change)="setDir($event)">
+        <option value="rtl">{{ t('עברית', 'Hebrew') }}</option>
+        <option value="ltr">{{ t('לטינית', 'Latin') }}</option>
+      </select>
+    </label>
+
+    @if (step === 'pick') {
+      <div class="graf-actions">
+        @if (nativeApp && !fileFallback) {
+          <button type="button" class="graf-cta" (click)="useNative('camera')">{{ t('📷 צילום כתב יד', '📷 Photograph handwriting') }}</button>
+          <button type="button" class="graf-cta secondary" (click)="useNative('photos')">{{ t('🖼️ בחירה מהגלריה', '🖼️ Choose from gallery') }}</button>
+        }
+        @if (!nativeApp || fileFallback) {
+          <label class="graf-cta drop" [class.over]="dragOver"
+            (dragover)="$event.preventDefault(); dragOver = true" (dragleave)="dragOver = false" (drop)="onDrop($event)">
+            <span>{{ t('🖼️ בחירת תמונה', '🖼️ Choose a photo') }}</span>
+            <small class="graf-drop-note">{{ t('אפשר גם לגרור את התמונה לכאן', 'You can also drop a photo here') }}</small>
+            <input class="graf-file" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" (change)="onFile($event)" [attr.aria-label]="t('בחירת תמונה', 'Choose a photo')" />
+          </label>
+        }
+      </div>
+    }
+
+    @if (busy) { <p class="graf-lead">{{ step === 'result' || validation?.valid ? t('מודד את הכתב…', 'Measuring the writing…') : t('בודק את התמונה…', 'Checking the photo…') }}</p> }
+    @if (error) { <p role="alert" class="err">{{ error }}</p> }
+
+    @if (previewUrl) {
+      <figure class="graf-preview">
+        <img [src]="previewUrl" [alt]="t('תצוגה מקדימה של כתב היד', 'Handwriting preview')" />
+      </figure>
+    }
+
+    @if (validation) {
+      <p class="graf-status" [class.ok]="validation.valid" [class.bad]="!validation.valid" role="status">
+        {{ validation.valid ? t('✓ התמונה נקלטה', '✓ Photo accepted') : t('⚠ יש בעיה באיכות התמונה', '⚠ There is a problem with the photo') }}
+      </p>
+      @if (validation.errors[0]; as problem) {
+        <p role="alert" class="graf-alert">{{ note(problem) }}</p>
+      }
+      <ul class="graf-checks">
+        @for (row of checklist(); track row.id) {
+          @if (row.state !== 'skip') {
+            <li [class.bad]="row.state === 'bad'">
+              <span aria-hidden="true">{{ row.state === 'ok' ? '✓' : '✕' }}</span>
+              {{ row.label }}
+            </li>
+          }
+        }
+      </ul>
+      @for (warn of validation.warnings; track warn.code) {
+        <p class="graf-warn">{{ note(warn) }}</p>
+      }
+      <div class="graf-actions">
+        <button type="button" class="graf-cta secondary" (click)="tryAnother()">{{ t('נסה תמונה אחרת', 'Try another photo') }}</button>
+        @if (validation.valid && step !== 'result') {
+          <button type="button" class="graf-cta" [disabled]="busy" (click)="analyze()">{{ t('המשך לניתוח', 'Continue to analysis') }}</button>
+        }
+      </div>
+    }
+
+    <p class="graf-privacy">{{ t('התמונה נבדקת ונמדדת במכשיר בלבד. היא לא נשמרת, לא נשלחת לשרת, ולא נשלחת לשירות חיצוני. היא נמחקת כשעוזבים את המסך.', 'The photo is checked and measured only on this device. It is not stored, not uploaded, and not sent to an external service. It is discarded when you leave this screen.') }}</p>
+  </section>
+
+  @if (step === 'result' && measured) {
+    <p class="graf-note graf-result-note">{{ t('הקריאה שלמטה היא פרשנות מסורתית. היא אינה עובדה מדעית ואינה אבחון אישיות.', 'The reading below is a traditional interpretation. It is not a scientific fact and not a personality diagnosis.') }}</p>
+    <section class="result">
+      @for (row of rows(); track row.key) {
+        <article class="sys">
+          <h3>{{ row.label }}</h3>
+          <p class="val">{{ row.value }}</p>
+          <p>{{ row.text }}</p>
+        </article>
+      }
+    </section>
+  }
+</app-screen>

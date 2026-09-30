@@ -1,0 +1,231 @@
+<app-screen [title]="t('תורת הזוהר', 'Zohar')">
+  <div class="zohar-app">
+    @if (view === 'home') {
+      <header class="zohar-hero">
+        <p class="zohar-kicker">{{ t('קריאת פנים וקווי כף היד', 'Face and palm reading') }}</p>
+        <h1>{{ t('תורת הזוהר', 'The Zohar') }}</h1>
+        <p>{{ t('לפי המסורת המובאת בספר הזוהר, ניתן להתבונן בתווי הפנים ובקווי כף היד ולקבל פרשנות רוחנית על מאפיינים שונים.', 'According to the tradition in the Zohar, the features of the face and the lines of the palm can be read as a spiritual interpretation.') }}</p>
+      </header>
+
+      <div class="zohar-grid">
+        <article class="zohar-card">
+          <ion-icon name="happy-outline" aria-hidden="true"></ion-icon>
+          <h2>{{ t('קריאת פנים (פרצוף)', 'Face reading') }}</h2>
+          <p>{{ t('התבוננות במצח, בעיניים ובמבנה הפנים, לפי הפרשנות המסורתית.', 'A look at the forehead, the eyes and the shape of the face, in the traditional reading.') }}</p>
+          <button type="button" class="zohar-cta" (click)="openFace()">{{ t('התחל', 'Start') }}</button>
+        </article>
+        <article class="zohar-card">
+          <ion-icon name="hand-left-outline" aria-hidden="true"></ion-icon>
+          <h2>{{ t('קווי כף היד', 'Palm lines') }}</h2>
+          <p>{{ t('קו הלב, קו הראש, קו החיים ומבנה כף היד, כפרשנות רוחנית.', 'The heart, head and life lines, and the shape of the hand, as a spiritual reading.') }}</p>
+          <button type="button" class="zohar-cta" (click)="openPalm()">{{ t('התחל', 'Start') }}</button>
+        </article>
+        <article class="zohar-card">
+          <ion-icon name="layers-outline" aria-hidden="true"></ion-icon>
+          <h2>{{ t('4 טמפרמנטים', '4 temperaments') }}</h2>
+          <p>{{ t('אש, אוויר, מים ועפר: ארבעה מזגים שאפשר להרחיב בלי לשנות את המסך.', 'Fire, air, water and earth: four temperaments the screen can grow with.') }}</p>
+          <button type="button" class="zohar-cta" (click)="openTemper()">{{ t('התחל', 'Start') }}</button>
+        </article>
+      </div>
+
+      <button type="button" class="zohar-more" (click)="moreOpen = !moreOpen" [attr.aria-expanded]="moreOpen">{{ t('📖 קרא עוד על הנושא', '📖 Read more about this') }}</button>
+      @if (moreOpen) {
+        <div class="zohar-more-body">
+          @for (section of more; track section.title.en) {
+            <section>
+              <h3>{{ section.title[lang.lang()] }}</h3>
+              <p>{{ section.text[lang.lang()] }}</p>
+            </section>
+          }
+        </div>
+      }
+
+      <p class="zohar-note" role="note">{{ t('חשוב: זו פרשנות מסורתית ורוחנית בלבד, לא אבחון רפואי, מדעי או עובדה מוכחת.', 'This is a traditional, spiritual reading only. It is not a medical or scientific diagnosis, and not a proven fact.') }}</p>
+      <button type="button" class="sample-link" (click)="sample()">{{ t('רוצים לראות דוגמה? הצגת קריאה לדוגמה', 'Want to see an example? Show a sample reading') }}</button>
+    }
+
+    @if (view === 'face' || view === 'palm' || view === 'profile') {
+      <button type="button" class="zohar-back" (click)="view === 'profile' ? backFromProfile() : home()">{{ t('חזרה', 'Back') }}</button>
+
+      @if (view === 'face') {
+        <h1>{{ t('איך לצלם תמונת פנים?', 'How to photograph a face') }}</h1>
+        <ul class="zohar-tips">
+          <li>{{ t('צילום פנים באור יום רך.', 'Soft daylight.') }}</li>
+          <li>{{ t('ללא פלאש במידת האפשר.', 'Without flash if you can.') }}</li>
+          <li>{{ t('הפנים ברורות וחדות, מבט ישר למצלמה.', 'A clear face, looking straight at the camera.') }}</li>
+          <li>{{ t('ללא משקפי שמש, ורצוי בלי כיסוי שמסתיר חלקים מהפנים.', 'No sunglasses, and preferably nothing covering the face.') }}</li>
+        </ul>
+        <p>{{ t('יש להעלות תמונת פנים ברורה. אחר כך אפשר להוסיף תמונת פרופיל, או לדלג עליה.', 'Upload a clear front-facing photo. A profile photo can be added next, or skipped.') }}</p>
+      }
+
+      @if (view === 'profile') {
+        <h1>{{ t('תמונת פרופיל', 'Profile photo') }}</h1>
+        <p>{{ t('אפשר לדלג על תמונת הפרופיל. הקריאה תתבסס על התמונה החזיתית.', 'The profile photo is optional. The reading uses the front-facing photo.') }}</p>
+      }
+
+      @if (view === 'palm') {
+        <h1>{{ t('איך לצלם את כף היד?', 'How to photograph a palm') }}</h1>
+        <ul class="zohar-tips">
+          <li>{{ t('כף היד פתוחה, והאצבעות ישרות ככל שניתן.', 'An open palm, fingers as straight as you can.') }}</li>
+          <li>{{ t('כל כף היד בתוך התמונה, במרכז, באור טוב.', 'The whole hand in the center, in good light.') }}</li>
+          <li>{{ t('ללא פלאש במידת האפשר, ובלי טשטוש.', 'Without flash if you can, and without blur.') }}</li>
+          <li>{{ t('קווי כף היד צריכים להיראות בבירור.', 'The lines of the palm should be easy to see.') }}</li>
+        </ul>
+        <div class="zohar-hand" role="group" [attr.aria-label]="t('איזו יד', 'Which hand')">
+          <button type="button" [class.on]="hand === 'right'" (click)="hand = 'right'">{{ t('יד ימין', 'Right hand') }}</button>
+          <button type="button" [class.on]="hand === 'left'" (click)="hand = 'left'">{{ t('יד שמאל', 'Left hand') }}</button>
+        </div>
+      }
+
+      @if (choices.unavailableNote) {
+        <p class="zohar-note">{{ issue('camera-missing') }}</p>
+      }
+      @if (errorCode) {
+        <p class="zohar-alert" role="alert">{{ issue(errorCode) }}</p>
+      }
+      @if (busy) {
+        <p class="zohar-status" role="status">{{ t('מתבצע ניתוח...', 'Preparing the reading...') }}</p>
+      }
+
+      @if (camOpen) {
+        <div class="zohar-cam" role="dialog" aria-modal="true" [attr.aria-label]="t('מצלמה', 'Camera')">
+          <video #vid autoplay playsinline muted></video>
+          <div class="zohar-actions">
+            <button type="button" class="zohar-cta" (click)="shoot()">{{ t('צלם', 'Take photo') }}</button>
+            <button type="button" class="zohar-ghost" (click)="closeCam()">{{ t('ביטול', 'Cancel') }}</button>
+          </div>
+        </div>
+      }
+
+      @if (view !== 'profile' && shot?.url) {
+        <figure class="zohar-preview">
+          <img [src]="shot.url" [alt]="t('תצוגה מקדימה של התמונה שנבחרה', 'Preview of the selected photo')" />
+          <figcaption>
+            <ul class="zohar-checks">
+              @for (line of shot.checks; track line.id) {
+                <li>
+                  <span [class.bad]="!line.ok">{{ line.ok ? t('תקין', 'Passed') : t('לא תקין', 'Needs a change') }}</span>
+                  {{ checkText(line) }}
+                </li>
+              }
+            </ul>
+          </figcaption>
+        </figure>
+      }
+
+      @if (view === 'profile' && profileUrl) {
+        <figure class="zohar-preview">
+          <img [src]="profileUrl" [alt]="t('תצוגה מקדימה של תמונת הפרופיל', 'Preview of the profile photo')" />
+          <figcaption>
+            <p>{{ profileNote === 'ok' ? t('תמונת הפרופיל תקינה. הקריאה נשענת על התמונה החזיתית.', 'The profile photo is usable. The reading stays with the front photo.') : issue(profileNote === 'ok' ? undefined : profileNote ?? undefined) }}</p>
+          </figcaption>
+        </figure>
+      }
+
+      <label class="zohar-consent">
+        <input type="checkbox" [checked]="agreed" (change)="agreed = $any($event.target).checked" />
+        <span>{{ t('על ידי העלאת התמונה אתה מאשר את עיבודה לצורך הפעלת השירות. התמונה נשארת במכשיר, לא נשמרת אחרי היציאה מהמסך, ולא נשלחת החוצה.', 'By uploading the photo you agree to process it for this service. It stays on the device, is not kept after you leave, and is not sent anywhere.') }}</span>
+      </label>
+
+      <div class="zohar-actions">
+        @if (choices.camera) {
+          <button type="button" class="zohar-cta" [class.secondary]="choices.filePrimary" (click)="nativeApp ? useNative('camera') : openBrowserCamera()">
+            {{ view === 'profile' ? t('📷 צלם תמונת פרופיל', '📷 Take a profile photo') : view === 'palm' ? t('📷 צלם תמונה', '📷 Take a photo') : t('📷 צלם תמונת פנים מלפנים', '📷 Take a front-facing photo') }}
+          </button>
+        }
+        @if (choices.gallery) {
+          <button type="button" class="zohar-ghost" (click)="useNative('photos')">{{ t('🖼️ בחר תמונה מהגלריה', '🖼️ Choose from the gallery') }}</button>
+        }
+        @if (choices.file) {
+          <label class="zohar-cta" [class.secondary]="choices.camera && !choices.filePrimary" [class.drop]="choices.drop" [class.over]="dragOver"
+            (dragover)="$event.preventDefault(); dragOver = true" (dragleave)="dragOver = false" (drop)="onDrop($event)">
+            {{ choices.drop ? t('גרור לכאן תמונה או לחץ לבחירת קובץ', 'Drop a photo here, or click to choose a file') : view === 'profile' ? t('🖼️ העלה תמונת פרופיל', '🖼️ Upload a profile photo') : t('🖼️ העלה תמונה', '🖼️ Upload a photo') }}
+            <input class="zohar-file" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" (change)="onFile($event)" [attr.aria-label]="t('בחירת תמונה', 'Choose a photo')" />
+          </label>
+        }
+      </div>
+
+      @if (shot && view === 'face') {
+        <div class="zohar-actions">
+          <button type="button" class="zohar-ghost" (click)="replace()">{{ t('החלף תמונה', 'Replace photo') }}</button>
+          <button type="button" class="zohar-cta" [disabled]="!agreed || !shot.reading" (click)="continueFace()">{{ t('המשך', 'Continue') }}</button>
+        </div>
+      }
+      @if (shot && view === 'palm') {
+        <div class="zohar-actions">
+          <button type="button" class="zohar-ghost" (click)="replace()">{{ t('החלף תמונה', 'Replace photo') }}</button>
+          <button type="button" class="zohar-cta" [disabled]="!agreed || !shot.reading" (click)="continuePalm()">{{ t('המשך', 'Continue') }}</button>
+        </div>
+      }
+      @if (view === 'profile') {
+        <div class="zohar-actions">
+          <button type="button" class="zohar-ghost" (click)="skipProfile()">{{ t('דלג על תמונת הפרופיל', 'Skip the profile photo') }}</button>
+          @if (profileNote === 'ok') {
+            <button type="button" class="zohar-cta" (click)="useProfile()">{{ t('המשך', 'Continue') }}</button>
+          }
+        </div>
+      }
+    }
+
+    @if (view === 'temper') {
+      <button type="button" class="zohar-back" (click)="home()">{{ t('חזרה', 'Back') }}</button>
+      <h1>{{ t('4 טמפרמנטים', '4 temperaments') }}</h1>
+      <p>{{ t('ארבעה מזגים מן המסורת. הרשימה מגיעה מהגדרות, ואפשר להרחיב אותה בלי לשנות את המסך.', 'Four traditional temperaments. The list comes from configuration, so it can grow without changing the screen.') }}</p>
+      <div class="zohar-grid">
+        @for (item of temperaments; track item.id) {
+          <article class="zohar-card">
+            <h2>{{ item.name[lang.lang()] }}</h2>
+            <p class="zohar-seen">{{ item.title[lang.lang()] }}</p>
+            <p>{{ t('במסורת מתואר כך:', 'The tradition describes it this way:') }} {{ item.text[lang.lang()] }}</p>
+            <p>{{ t('עשוי להתאים למתנה כמו', 'May go with a gift such as') }} {{ item.gift[lang.lang()] }}.</p>
+            <p>{{ t('נקודה שאפשר לשים לב אליה:', 'A point worth noticing:') }} {{ item.care[lang.lang()] }}.</p>
+          </article>
+        }
+      </div>
+      <p class="zohar-note" role="note">{{ t('זהו תיאור מסורתי של מזגים, לא אבחון של אדם מסוים.', 'This is a traditional description of temperaments, not a diagnosis of a particular person.') }}</p>
+    }
+
+    @if (view === 'result' && reading) {
+      <button type="button" class="zohar-back" (click)="home()">{{ t('חזרה', 'Back') }}</button>
+      <h1>{{ reading.kind === 'face' ? t('קריאת פנים', 'Face reading') : t('קריאת כף יד', 'Palm reading') }}</h1>
+      @if (sampleMode) {
+        <p class="zohar-note">{{ t('דוגמה להמחשה, לא מתוך תמונה שהועלתה.', 'A sample, not from a photo you uploaded.') }}</p>
+      } @else if (reading.kind === 'palm') {
+        <p>{{ hand === 'right' ? t('הקריאה מתייחסת ליד ימין.', 'This reading is for the right hand.') : t('הקריאה מתייחסת ליד שמאל.', 'This reading is for the left hand.') }}</p>
+      }
+      <p class="zohar-lead">{{ reading.kind === 'face'
+        ? t('על פי הפרשנות המסורתית המיוחסת לחכמת הפרצוף, מאפיין זה נקשר למה שמופיע בהמשך. זו אינה קביעה על אופי האדם.', 'In the traditional face reading, a feature is linked to the text below. This is not a statement of fact about a person.')
+        : t('לפי המסורת על קווי כף היד, מה שנראה בתמונה עשוי להתאים לטקסט שלמטה. זו פרשנות רוחנית בלבד.', 'In the palm tradition, what shows in the photo may fit the text below. It is a spiritual reading only.') }}</p>
+
+      @for (item of reading.items; track item.key) {
+        <article class="zohar-result">
+          <h2>{{ item.name[lang.lang()] }}</h2>
+          <p class="zohar-seen">{{ t('מה שנראה:', 'What showed:') }} {{ item.seen[lang.lang()] }}</p>
+          <p>{{ item.text[lang.lang()] }}</p>
+        </article>
+      }
+
+      @if (extra) {
+        <h2 class="zohar-subhead">{{ t('דוגמה גם לקווי כף היד', 'A sample of the palm lines too') }}</h2>
+        @for (item of extra.items; track item.key) {
+          <article class="zohar-result">
+            <h2>{{ item.name[lang.lang()] }}</h2>
+            <p class="zohar-seen">{{ item.seen[lang.lang()] }}</p>
+            <p>{{ item.text[lang.lang()] }}</p>
+          </article>
+        }
+      }
+
+      <article class="zohar-result">
+        <h2>{{ t('מזג שעשוי להתאים', 'A temperament that may fit') }}</h2>
+        <p class="zohar-seen">{{ elements[reading.chart.element].name[lang.lang()] }} · {{ elements[reading.chart.element].temperament[lang.lang()] }}</p>
+        <p>{{ t('במסורת מתואר כך:', 'The tradition describes it this way:') }} {{ elements[reading.chart.element].text[lang.lang()] }}</p>
+      </article>
+
+      @if (reading.kind === 'face') {
+        <p>{{ t('שפתיים ואף לא נמדדו מהתמונה. הפרשנות כאן מתייחסת למאפיינים שזוהו.', 'The lips and nose were not measured from the photo. The reading covers the features that were picked out.') }}</p>
+      }
+      <p class="zohar-note" role="note">{{ t('התוצאה היא פרשנות מסורתית ורוחנית בלבד. היא אינה אבחון רפואי, מדעי או קביעה על אופי האדם.', 'The result is a traditional, spiritual reading only. It is not a medical or scientific diagnosis, and not a statement about who a person is.') }}</p>
+    }
+  </div>
+</app-screen>

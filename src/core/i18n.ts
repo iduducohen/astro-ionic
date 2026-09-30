@@ -1,14 +1,58 @@
 /**
  * i18n.ts — מחרוזות ממשק לשתי השפות, משותף לאתר ולאפליקציה.
  */
-import { joinAnd, type Lang, type Profile } from './astro.ts';
+import { joinAnd, type Lang, type Profile } from './astro';
 
 export const LANGS: Lang[] = ['he', 'en'];
 export const dirOf = (lang: Lang): 'rtl' | 'ltr' => (lang === 'he' ? 'rtl' : 'ltr');
 
+const LANG_MIRROR = 'astro:lang';
+
+function readSavedLang(): Lang | null {
+  try {
+    const raw = localStorage.getItem(LANG_MIRROR) ?? localStorage.getItem('CapacitorStorage.astro:lang');
+    if (!raw) return null;
+    const parsed = raw.startsWith('"') ? JSON.parse(raw) : raw;
+    return parsed === 'he' || parsed === 'en' ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+/** שומר בחירת שפה גם מחוץ ל-Preferences, כדי שהכיוון יהיה נכון כבר בפריים הראשון. */
+export function mirrorLang(lang: Lang): void {
+  try { localStorage.setItem(LANG_MIRROR, lang); } catch { /* מצב פרטי */ }
+}
+
+function isNativeShell(): boolean {
+  const cap = (globalThis as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor;
+  try {
+    return cap?.isNativePlatform?.() === true;
+  } catch {
+    return false;
+  }
+}
+
+export function urlLang(): Lang | null {
+  if (typeof location === 'undefined') return null;
+  try {
+    const q = new URLSearchParams(location.search).get('lang');
+    return q === 'he' || q === 'en' ? q : null;
+  } catch {
+    return null;
+  }
+}
+
 export function detectLang(): Lang {
-  const nav = typeof navigator !== 'undefined' ? navigator.language || '' : '';
-  return /^(he|iw)\b/i.test(nav) ? 'he' : 'en';
+  // באתר: עברית כברירת מחדל, כדי שגוגל יאנדקס את העברית.
+  // אנגלית נפתחת רק מקישור ?lang=en או אחרי שהמשתמש בחר שפה.
+  if (!isNativeShell()) {
+    const fromUrl = urlLang();
+    if (fromUrl) return fromUrl;
+  }
+  const saved = readSavedLang();
+  if (saved) return saved;
+  return 'he';
 }
 
 const he = {

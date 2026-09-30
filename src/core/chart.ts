@@ -4,7 +4,7 @@
  * מבוסס astronomy-engine (MIT), דיוק של שניות-קשת עד דקות-קשת.
  */
 import * as Astro from 'astronomy-engine';
-import { ZODIAC, type ZodiacSign } from './astro.ts';
+import { ZODIAC, type ZodiacSign } from './astro';
 
 export type PlanetId =
   | 'sun' | 'moon' | 'mercury' | 'venus' | 'mars'

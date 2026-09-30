@@ -1,8 +1,8 @@
 /**
  * share-text.ts — טקסטים מעוצבים לשיתוף (וואטסאפ, טלגרם, מייל…), שורה לכל מערכת.
  */
-import { ELEMENTS, NUMBER_MEANINGS, type Lang, type Profile } from './astro.ts';
-import { lifeAreas } from './life-areas.ts';
+import { ELEMENTS, NUMBER_MEANINGS, type Lang, type Profile } from './astro';
+import { lifeAreas } from './life-areas';
 
 export function profileShareText(p: Profile, lang: Lang): string {
   const he = lang === 'he';

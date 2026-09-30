@@ -3,9 +3,9 @@
  * לכל קלף: תמונה, מהות, אהבה, עבודה וכסף, עולם פנימי, קלף הפוך, עצה, שאלה להתבוננות ונטיית כן/לא.
  * בנוסף: קריאת פריסה שלמה (תמצית, שלבי מסע השוטה, איזון ישר/הפוך).
  */
-import type { L } from './astro.ts';
-import { MAJOR_ARCANA, type DrawnCard } from './tarot.ts';
-import { PATHS22, sephira } from './tree.ts';
+import type { L } from './astro';
+import { MAJOR_ARCANA, type DrawnCard } from './tarot';
+import { PATHS22, sephira } from './tree';
 
 const x = (he: string, en: string): L => ({ he, en });
 

@@ -1,0 +1,19 @@
+<section class="hd-panel">
+  <h2>{{ t('פרטי לידה', 'Birth details') }}</h2>
+  <p class="hd-lead">{{ t('המפה הנוכחית נבנית מתאריך ומשעה. מקום לידה ואזור זמן יתווספו בהמשך, והמנוע ניתן להחלפה.', 'The current chart is built from a date and time. Birth place and time zone will be added later, and the engine can be replaced.') }}</p>
+  <form (submit)="submit($event)" class="form-card">
+    <app-when kind="date" [label]="lang.text().birthDate" [value]="birth" (valueChange)="birth = $event"></app-when>
+    <app-when kind="time" [label]="lang.text().birthTime" [value]="time" [disabled]="timeUnknown" (valueChange)="time = $event || '12:00'"></app-when>
+    <label class="hd-check">
+      <input type="checkbox" [checked]="timeUnknown" (change)="setUnknown($event)" />
+      <span>{{ t('אני לא יודע/ת את שעת הלידה', 'I do not know the birth time') }}</span>
+    </label>
+    @if (timeUnknown) {
+      <p class="hd-note">{{ t('בלי שעת לידה הדיוק של המפה עשוי להיות מוגבל. אפשר להמשיך ולהשלים אחר כך.', 'Without a birth time the chart may be less specific. You can continue and add it later.') }}</p>
+    }
+    @if (error) { <p role="alert" class="err">{{ error }}</p> }
+    <ion-button type="submit" expand="block" class="btn-main">{{ t('יצירת המפה שלי', 'Create my chart') }}</ion-button>
+  </form>
+  <p class="hd-privacy">{{ t('הפרטים נשמרים במכשיר בלבד, ואפשר למחוק אותם בהגדרות.', 'Details stay on this device, and you can delete them in settings.') }}</p>
+  <a routerLink="/hd">{{ t('חזרה לבית', 'Back home') }}</a>
+</section>

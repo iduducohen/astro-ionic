@@ -1,0 +1,12 @@
+<app-screen [title]="t('עיצוב אנושי', 'Human Design')">
+  <div class="hd-app">
+    <nav class="hd-nav" [attr.aria-label]="t('ניווט בעיצוב אנושי', 'Human Design navigation')">
+      @for (link of links; track link.path) {
+        <a [routerLink]="link.path" routerLinkActive="on" [routerLinkActiveOptions]="{ exact: link.exact }">{{ t(link.he, link.en) }}</a>
+      }
+    </nav>
+    <div class="hd-main">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</app-screen>

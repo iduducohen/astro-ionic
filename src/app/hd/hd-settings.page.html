@@ -1,0 +1,16 @@
+<section class="hd-panel">
+  <h2>{{ t('הגדרות', 'Settings') }}</h2>
+  <label class="native-field">
+    <span>{{ t('שם לתצוגה, אם רוצים', 'A display name, if you want one') }}</span>
+    <input [value]="name" (input)="setName($event)" [attr.aria-label]="t('שם לתצוגה', 'Display name')" autocomplete="nickname" />
+  </label>
+  <ion-button type="button" expand="block" class="btn-main" (click)="saveName()">{{ t('שמירת השם', 'Save name') }}</ion-button>
+  @if (saved) { <p class="hd-note">{{ t('השם נשמר במכשיר.', 'The name is saved on this device.') }}</p> }
+
+  <h3>{{ t('הפרטים במכשיר', 'Details on this device') }}</h3>
+  <p class="hd-lead">{{ t('תאריך הלידה, השעה והשם נשמרים רק במכשיר. אין שליחה לשרת. מחיקה מוחקת את המפה מהמכשיר הזה.', 'The birth date, time and name stay only on this device. Nothing is sent to a server. Clearing removes the chart from this device.') }}</p>
+  <ion-button type="button" fill="outline" expand="block" (click)="clearChart()">{{ t('מחיקת המפה', 'Delete the chart') }}</ion-button>
+
+  <h3>{{ t('על המערכת', 'About the system') }}</h3>
+  <p class="hd-note">{{ t('Human Design היא מערכת להתבוננות עצמית ורוחנית. אין כיום בסיס מדעי מבוסס לכך שהמערכת יכולה למדוד אישיות, לקבל החלטות עבור אדם או לחזות את התנהגותו.', 'Human Design is a spiritual system for self-reflection. There is no established scientific basis for it measuring personality, making decisions for a person, or predicting behavior.') }}</p>
+</section>
