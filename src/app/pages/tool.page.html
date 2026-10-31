@@ -1,4 +1,5 @@
 <app-screen [title]="lang.text().tools[tool()]" back="/charts">
+  <div class="sanctuary sky-tool">
   <a class="back-link" routerLink="/charts" [queryParams]="lang.lang() === 'en' ? { lang: 'en' } : null">{{ lang.lang() === 'he' ? 'חזרה למפות' : 'Back to charts' }}</a>
   <h1 class="page-title">{{ lang.text().tools[tool()] }}</h1>
   <p class="page-intro">{{ lang.text().toolDesc[tool()] }}</p>
@@ -100,4 +101,5 @@
     <button type="button" class="sample-link" (click)="sample()">{{ lang.lang() === 'he' ? 'רוצים לראות דוגמה? מילוי מפה לדוגמה' : 'Want to see an example? Fill a sample chart' }}</button>
   </form>
   <div class="tool-result" aria-live="polite" [innerHTML]="html"></div>
+  </div>
 </app-screen>

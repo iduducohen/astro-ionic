@@ -1,192 +1,293 @@
 <app-screen [title]="lang.text().appTitle">
-  <div class="hero">
-    <svg class="wheel" viewBox="0 0 220 220" aria-hidden="true">
-      <circle cx="110" cy="110" r="104" fill="var(--astro-wheel)" stroke="var(--astro-wheel-line)" stroke-width="1" />
-      <circle cx="110" cy="110" r="62" fill="none" stroke="var(--astro-wheel-line)" />
-      <circle cx="110" cy="110" r="98" fill="none" stroke="var(--astro-wheel-line)" stroke-width=".6" />
-      <g class="rot" [attr.style]="'transform: rotate(' + wheelRotation() + 'deg)'">
-        @for (s of signs; track s.id; let i = $index) {
-          <g>
-            <line [attr.x1]="pt(i * 30 - 15, 62).x" [attr.y1]="pt(i * 30 - 15, 62).y" [attr.x2]="pt(i * 30 - 15, 104).x" [attr.y2]="pt(i * 30 - 15, 104).y" stroke="var(--astro-wheel-line)" />
-            <text [attr.x]="pt(i * 30, 83).x" [attr.y]="pt(i * 30, 83).y" text-anchor="middle" dominant-baseline="central"
-              [attr.transform]="'rotate(' + (i * 30) + ' ' + pt(i * 30, 83).x + ' ' + pt(i * 30, 83).y + ')'"
-              [class.on]="i === signIndex()">{{ s.symbol }}</text>
+  <div class="sanctuary atlas">
+    <nav class="s-tabs" [attr.aria-label]="lang.lang() === 'he' ? 'מדורי המפה' : 'Chart sections'">
+      <button type="button" [class.on]="tab === 'map'" (click)="setTab('map')">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <span>{{ lang.lang() === 'he' ? 'המפה' : 'The chart' }}</span>
+      </button>
+      <button type="button" [class.on]="tab === 'gifts'" (click)="setTab('gifts')">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 9h8M8 13h5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <span>{{ lang.lang() === 'he' ? 'מה מקבלים' : 'What you get' }}</span>
+      </button>
+      <button type="button" [class.on]="tab === 'about'" (click)="setTab('about')">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="8" r=".8" fill="currentColor"/></svg>
+        <span>{{ lang.lang() === 'he' ? 'אודות' : 'About' }}</span>
+      </button>
+      <button type="button" [class.on]="tab === 'faq'" (click)="setTab('faq')">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.2 2.4c-.7.3-1.2.8-1.2 1.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="11.5" cy="16.2" r=".8" fill="currentColor"/></svg>
+        <span>{{ lang.lang() === 'he' ? 'שאלות נפוצות' : 'Questions' }}</span>
+      </button>
+    </nav>
+
+    @if (tab === 'map') {
+      <header class="s-hero atlas-hero">
+        <div class="sky" aria-hidden="true">
+          @for (i of stars; track i) {
+            <span class="star" [style.--n]="i"></span>
+          }
+        </div>
+        <p class="s-kicker">✦ {{ txt(sanctuary.kicker) }}</p>
+        <h1>{{ txt(sanctuary.title) }}</h1>
+        <p class="s-lead">{{ txt(sanctuary.lead) }}</p>
+        <svg class="wheel" viewBox="0 0 220 220" aria-hidden="true">
+          <circle cx="110" cy="110" r="104" fill="var(--astro-wheel)" stroke="var(--astro-wheel-line)" stroke-width="1" />
+          <circle cx="110" cy="110" r="62" fill="none" stroke="var(--astro-wheel-line)" />
+          <circle cx="110" cy="110" r="98" fill="none" stroke="var(--astro-wheel-line)" stroke-width=".6" />
+          <g class="rot" [attr.style]="'transform: rotate(' + wheelRotation() + 'deg)'">
+            @for (s of signs; track s.id; let i = $index) {
+              <g>
+                <line [attr.x1]="pt(i * 30 - 15, 62).x" [attr.y1]="pt(i * 30 - 15, 62).y" [attr.x2]="pt(i * 30 - 15, 104).x" [attr.y2]="pt(i * 30 - 15, 104).y" stroke="var(--astro-wheel-line)" />
+                <text [attr.x]="pt(i * 30, 83).x" [attr.y]="pt(i * 30, 83).y" text-anchor="middle" dominant-baseline="central"
+                  [attr.transform]="'rotate(' + (i * 30) + ' ' + pt(i * 30, 83).x + ' ' + pt(i * 30, 83).y + ')'"
+                  [class.on]="i === signIndex()">{{ s.symbol }}</text>
+              </g>
+            }
           </g>
-        }
-      </g>
-      <path d="M110 3 l-5 0 l5 9 l5 -9 z" fill="var(--astro-moon)" />
-      <text x="110" y="110" text-anchor="middle" dominant-baseline="central"
-        [attr.style]="'font: 500 26px var(--display-font); fill: ' + (signIndex() === null ? 'var(--astro-moon)' : 'var(--ion-text-color)')">
-        {{ signIndex() === null ? '✦' : signs[signIndex()!].symbol }}
-      </text>
-    </svg>
-    <app-intro page="me" [heading]="lang.lang() === 'he' ? 'המפה האישית שלך' : 'Your personal chart'"></app-intro>
-  </div>
+          <path d="M110 3 l-5 0 l5 9 l5 -9 z" fill="var(--astro-moon)" />
+          <text x="110" y="110" text-anchor="middle" dominant-baseline="central"
+            [attr.style]="'font: 500 26px var(--display-font); fill: ' + (signIndex() === null ? 'var(--astro-moon)' : 'var(--ion-text-color)')">
+            {{ signIndex() === null ? '✦' : signs[signIndex()!].symbol }}
+          </text>
+        </svg>
+        <div class="s-jump">
+          <button type="button" (click)="go('atlas-form')">{{ lang.lang() === 'he' ? 'לבניית המפה' : 'Build the chart' }}</button>
+          <button type="button" class="ghost" (click)="setTab('gifts')">{{ lang.lang() === 'he' ? 'מה מקבלים' : 'What you get' }}</button>
+        </div>
+      </header>
 
-  <form (submit)="submit($event)" class="form-card chart-form">
-    <div class="who">
-      <ion-input mode="md" [label]="lang.text().name" labelPlacement="stacked" fill="outline" [placeholder]="lang.text().namePlaceholder"
-        [value]="name" (ionInput)="onName($event)" autocomplete="given-name"></ion-input>
-      <div class="when-stack">
-        <app-when kind="date" [label]="lang.text().birthDate" [value]="birth" min="1900-01-01" [max]="today" (valueChange)="onBirth($event)"></app-when>
-        <app-when kind="time" [label]="lang.text().birthTime" [value]="time" [disabled]="!timeKnown" (valueChange)="onTime($event)"></app-when>
-        <ion-checkbox [checked]="!timeKnown" (ionChange)="onTimeKnown($event)" labelPlacement="end" justify="start">{{ lang.text().timeUnknown }}</ion-checkbox>
-      </div>
-    </div>
-    <div>
-      <ion-checkbox [checked]="sunset" (ionChange)="onSunset($event)" labelPlacement="end" justify="start">{{ lang.text().afterSunset }}</ion-checkbox>
-      <ion-note style="display:block;margin:6px 0 0;font-size:13px;line-height:1.45">{{ lang.text().afterSunsetHelp }}</ion-note>
-    </div>
-    <p class="muted" style="margin:0;font-size:13.5px;line-height:1.5">{{ lang.lang() === 'he' ? 'שעה ומקום אינם חובה. איתם מתקבלים גם הירח והמזל העולה, לא רק מזל השמש.' : 'Time and place are optional. With them you also get the Moon and the rising sign, not only the Sun sign.' }}</p>
-    <div class="pair">
-      <label class="native-field"><span>{{ lang.text().country }}</span>
-        <select [value]="cc" (change)="onCountry($event)">
-          @for (c of countries; track c) { <option [value]="c">{{ countryName(c) }}</option> }
-        </select>
-      </label>
-      <label class="native-field"><span>{{ lang.lang() === 'he' ? 'עיר' : 'City' }}</span>
-      <select [value]="placeId" (change)="onPlace($event)">
-        <option value="">{{ lang.lang() === 'he' ? 'בלי מקום — קריאה לפי תאריך בלבד' : 'No place — a date-only reading' }}</option>
-        @for (city of cities(); track city.id) { <option [value]="city.id">{{ city.name[lang.lang()] }}</option> }
-      </select>
-    </label>
-    </div>
-    @if (error) { <p role="alert" class="err">{{ error }}</p> }
-    <ion-button type="submit" expand="block" class="btn-main">{{ lang.text().showChart }}</ion-button>
-    <button type="button" class="sample-link" (click)="sample()">
-      {{ lang.lang() === 'he' ? 'רוצים לראות דוגמה? הצגת מפה לדוגמה' : 'Want to see an example? Show a sample chart' }}
-    </button>
-  </form>
-
-  @if (profile(); as p) {
-    <div aria-live="polite" class="result">
-      <article class="form-card chart-lead">
-        <button type="button" class="share-btn" (click)="openShare()">
-          <ion-icon name="share-outline" aria-hidden="true"></ion-icon>
-          {{ lang.lang() === 'he' ? 'שיתוף' : 'Share' }}
+      <form id="atlas-form" (submit)="submit($event)" class="form-card chart-form s-form">
+        <p class="s-kicker">☉ {{ lang.lang() === 'he' ? 'פרטי הלידה' : 'Birth details' }}</p>
+        <h2>{{ lang.lang() === 'he' ? 'פותחים את הדיוקן' : 'Open the portrait' }}</h2>
+        <div class="who">
+          <ion-input mode="md" [label]="lang.text().name" labelPlacement="stacked" fill="outline" [placeholder]="lang.text().namePlaceholder"
+            [value]="name" (ionInput)="onName($event)" autocomplete="given-name"></ion-input>
+          <div class="when-stack">
+            <app-when kind="date" [label]="lang.text().birthDate" [value]="birth" min="1900-01-01" [max]="today" (valueChange)="onBirth($event)"></app-when>
+            <app-when kind="time" [label]="lang.text().birthTime" [value]="time" [disabled]="!timeKnown" (valueChange)="onTime($event)"></app-when>
+            <ion-checkbox [checked]="!timeKnown" (ionChange)="onTimeKnown($event)" labelPlacement="end" justify="start">{{ lang.text().timeUnknown }}</ion-checkbox>
+          </div>
+        </div>
+        <div>
+          <ion-checkbox [checked]="sunset" (ionChange)="onSunset($event)" labelPlacement="end" justify="start">{{ lang.text().afterSunset }}</ion-checkbox>
+          <ion-note style="display:block;margin:6px 0 0;font-size:13px;line-height:1.45">{{ lang.text().afterSunsetHelp }}</ion-note>
+        </div>
+        <p class="muted" style="margin:0;font-size:13.5px;line-height:1.5">{{ lang.lang() === 'he' ? 'שעה ומקום אינם חובה. איתם מתקבלים גם הירח והמזל העולה, לא רק מזל השמש.' : 'Time and place are optional. With them you also get the Moon and the rising sign, not only the Sun sign.' }}</p>
+        <div class="pair">
+          <label class="native-field"><span>{{ lang.text().country }}</span>
+            <select [value]="cc" (change)="onCountry($event)">
+              @for (c of countries; track c) { <option [value]="c">{{ countryName(c) }}</option> }
+            </select>
+          </label>
+          <label class="native-field"><span>{{ lang.lang() === 'he' ? 'עיר' : 'City' }}</span>
+          <select [value]="placeId" (change)="onPlace($event)">
+            <option value="">{{ lang.lang() === 'he' ? 'בלי מקום — קריאה לפי תאריך בלבד' : 'No place — a date-only reading' }}</option>
+            @for (city of cities(); track city.id) { <option [value]="city.id">{{ city.name[lang.lang()] }}</option> }
+          </select>
+        </label>
+        </div>
+        @if (error) { <p role="alert" class="err">{{ error }}</p> }
+        <ion-button type="submit" expand="block" class="btn-main">{{ lang.text().showChart }}</ion-button>
+        <button type="button" class="sample-link" (click)="sample()">
+          {{ lang.lang() === 'he' ? 'רוצים לראות דוגמה? הצגת מפה לדוגמה' : 'Want to see an example? Show a sample chart' }}
         </button>
-        <p class="muted" style="margin:0;font-size:14px">{{ lang.text().ageLine(p.name, p.age) }}</p>
-        <h2 class="headline">{{ lang.text().signTitle(p.western.name[lang.lang()]) }}<span class="sym">{{ p.western.symbol }}</span></h2>
-        <p class="lead-read">{{ p.western.text[lang.lang()] }}</p>
-        <p class="lead-read">{{ p.western.more[lang.lang()] }}</p>
-        <ul class="chips">
-          @for (t of p.western.traits; track t.en) { <li>{{ t[lang.lang()] }}</li> }
-        </ul>
-        <p class="lead-read">{{ plainSun(p) }}</p>
-        <p class="lead-read">{{ plainSlice(p) }}</p>
-        <a class="full-link" routerLink="/charts/natal" [queryParams]="lang.lang() === 'en' ? { lang: 'en' } : null">{{ lang.lang() === 'he' ? 'רוצים גם את כל הכוכבים והבתים? זו המפה המלאה' : 'Want every planet and house too? That is the full chart' }}</a>
-      </article>
+      </form>
 
-      @if (sky.length) {
-        <h2 class="section-label">{{ lang.lang() === 'he' ? 'מה שקורה בפנים, ואיך זרים רואים אותך' : 'What happens inside, and how strangers see you' }}</h2>
-        <p class="sky-lead">{{ lang.lang() === 'he' ? 'מזל השמש למעלה אומר איך אתה פועל עם אנשים. כאן כתוב מה אתה צריך כשאתה לבד, ואיך מי שלא מכיר אותך קורא אותך בדקה הראשונה.' : 'The Sun sign above says how you act with people. Here is what you need when you are alone, and how someone who does not know you reads you in the first minute.' }}</p>
-        <div class="systems">
-          @for (card of sky; track card.title) {
+      @if (profile(); as p) {
+        <div aria-live="polite" class="result">
+          <article class="form-card chart-lead">
+            <button type="button" class="share-btn" (click)="openShare()">
+              <ion-icon name="share-outline" aria-hidden="true"></ion-icon>
+              {{ lang.lang() === 'he' ? 'שיתוף' : 'Share' }}
+            </button>
+            <p class="s-kicker">✦ {{ lang.lang() === 'he' ? 'הדיוקן פתוח במלואו' : 'The portrait is fully open' }}</p>
+            <p class="muted" style="margin:0;font-size:14px">{{ lang.text().ageLine(p.name, p.age) }}</p>
+            <h2 class="headline">{{ lang.text().signTitle(p.western.name[lang.lang()]) }}<span class="sym">{{ p.western.symbol }}</span></h2>
+            <p class="lead-read">{{ p.western.text[lang.lang()] }}</p>
+            <p class="lead-read">{{ p.western.more[lang.lang()] }}</p>
+            <ul class="chips">
+              @for (t of p.western.traits; track t.en) { <li>{{ t[lang.lang()] }}</li> }
+            </ul>
+            <p class="lead-read">{{ plainSun(p) }}</p>
+            <p class="lead-read">{{ plainSlice(p) }}</p>
+            <a class="full-link" routerLink="/charts/natal" [queryParams]="lang.lang() === 'en' ? { lang: 'en' } : null">{{ lang.lang() === 'he' ? 'רוצים גם את כל הכוכבים והבתים? זו המפה המלאה, וגם היא בחינם' : 'Want every planet and house too? That is the full chart, and it is free too' }}</a>
+          </article>
+
+          @if (sky.length) {
+            <h2 class="section-label">{{ lang.lang() === 'he' ? 'הירח, ואם יש שעה — גם האופק' : 'The Moon, and the rising sign if there is a time' }}</h2>
+            <p class="sky-lead">{{ lang.lang() === 'he' ? 'מזל השמש למעלה אומר איך אתה פועל עם אנשים. כאן כתוב מה אתה צריך כשאתה לבד, ואיך מי שלא מכיר אותך קורא אותך בדקה הראשונה.' : 'The Sun sign above says how you act with people. Here is what you need when you are alone, and how someone who does not know you reads you in the first minute.' }}</p>
+            <div class="systems">
+              @for (card of sky; track card.title) {
+                <article class="sys">
+                  <h3>{{ card.title }}</h3>
+                  <p class="val">{{ card.value }}</p>
+                  <p>{{ card.text }}</p>
+                  <p class="gives">{{ card.source }}</p>
+                </article>
+              }
+            </div>
+          }
+
+          <div class="systems">
             <article class="sys">
-              <h3>{{ card.title }}</h3>
-              <p class="val">{{ card.value }}</p>
-              <p>{{ card.text }}</p>
-              <p class="gives">{{ card.source }}</p>
+              <h3><ion-icon name="star-outline" aria-hidden="true"></ion-icon> {{ lang.text().hebrewSign }}</h3>
+              <p class="val">{{ p.hebrew.sign.name[lang.lang()] }} {{ p.hebrew.sign.symbol }}</p>
+              <p class="sub">{{ lang.text().hebrewBorn(p.hebrew.formatted[lang.lang()], p.hebrew.month.tribe[lang.lang()]) }}</p>
+              <p>{{ hebrewBody(p) }}</p>
+              <p class="gives">{{ hebrewGives(p) }}</p>
+            </article>
+            <article class="sys">
+              <h3><ion-icon name="paw-outline" aria-hidden="true"></ion-icon> {{ lang.text().chineseSign }}</h3>
+              <p class="val">{{ p.chinese.animal.name[lang.lang()] }}</p>
+              <p class="sub">{{ lang.lang() === 'he' ? 'שנת ' + p.chinese.chineseYear : 'Year ' + p.chinese.chineseYear }}</p>
+              <p>{{ chineseBody(p) }}</p>
+              <p class="gives">{{ chineseGives() }}</p>
+            </article>
+            <article class="sys">
+              <h3><ion-icon name="calculator-outline" aria-hidden="true"></ion-icon> {{ lang.text().lifePath }}</h3>
+              <p class="val">{{ p.lifePath }} — {{ life(p).title[lang.lang()] }}</p>
+              <p>{{ life(p).text[lang.lang()] }}</p>
+              <p class="gives">{{ lifeGives(p) }}</p>
+            </article>
+            <article class="sys">
+              <h3><ion-icon name="text-outline" aria-hidden="true"></ion-icon> {{ lang.text().nameNumber }}</h3>
+              <p class="val">{{ p.nameNum.number }} — {{ nameNum(p).title[lang.lang()] }}</p>
+              <p>{{ nameBody(p) }}</p>
+              <p class="gives">{{ nameGives(p) }}</p>
+            </article>
+            <article class="sys">
+              <h3><ion-icon name="leaf-outline" aria-hidden="true"></ion-icon> {{ lang.text().celtic }}</h3>
+              <p class="val">{{ p.celtic.name[lang.lang()] }}</p>
+              <p>{{ p.celtic.text[lang.lang()] }}</p>
+              <p class="gives">{{ celticGives() }}</p>
+            </article>
+            <article class="sys">
+              <h3><ion-icon name="sparkles-outline" aria-hidden="true"></ion-icon> {{ lang.text().birthCard }}</h3>
+              <p class="val">{{ p.tarot.roman }} — {{ p.tarot.name[lang.lang()] }}</p>
+              <p>{{ p.tarot.upright[lang.lang()] }}</p>
+              <p class="gives">{{ tarotGives() }}</p>
+            </article>
+            <article class="sys">
+              <h3><ion-icon name="diamond-outline" aria-hidden="true"></ion-icon> {{ lang.text().stoneFlower }}</h3>
+              <p class="val"><span class="swatch" [style.background]="p.birth.color"></span>{{ p.birth.stone[lang.lang()] }}</p>
+              <p class="sub">{{ lang.text().flowerOf(p.birth.flower[lang.lang()]) }}</p>
+              <p>{{ stoneBody(p) }}</p>
+              <p class="gives">{{ stoneGives() }}</p>
+            </article>
+          </div>
+
+          <section class="la">
+            <h2 class="section-label">{{ lang.lang() === 'he' ? 'איפה זה פוגש את החיים — ' + p.western.name.he : 'Where this meets life — ' + p.western.name.en }}</h2>
+            <p class="sky-lead">{{ lang.lang() === 'he' ? 'השורה הראשונה בכל תחום היא לפי מזל השמש: הסגנון היומי. בקריירה ובאהבה יש גם שורה לפי מספר החיים: לאן זה הולך לאורך שנים. אם הן לא אותו דבר, שתיהן נכונות.' : 'The first line in each area is the Sun sign: the daily style. Career and love also have a line from the life-path number: where it goes over years. If they differ, both are true.' }}</p>
+            <div class="la-grid">
+              <article class="la-item"><h3>{{ lang.lang() === 'he' ? 'קריירה' : 'Career' }}</h3><p class="la-why">{{ areaWhy('career') }}</p><p>{{ areas(p).areas.career[lang.lang()] }}</p><p class="la-extra">{{ lifePathCareer(p) }}</p></article>
+              <article class="la-item"><h3>{{ lang.lang() === 'he' ? 'כסף' : 'Money' }}</h3><p class="la-why">{{ areaWhy('money') }}</p><p>{{ areas(p).areas.money[lang.lang()] }}</p></article>
+              <article class="la-item"><h3>{{ lang.lang() === 'he' ? 'אהבה' : 'Love' }}</h3><p class="la-why">{{ areaWhy('love') }}</p><p>{{ areas(p).areas.love[lang.lang()] }}</p><p class="la-extra">{{ lifePathLove(p) }}</p></article>
+              <article class="la-item"><h3>{{ lang.lang() === 'he' ? 'בריאות' : 'Health' }}</h3><p class="la-why">{{ areaWhy('health') }}</p><p>{{ areas(p).areas.health[lang.lang()] }}</p><p>{{ healthExtra(p) }}</p></article>
+              <article class="la-item"><h3>{{ lang.lang() === 'he' ? 'חוזקות' : 'Strengths' }}</h3><p class="la-why">{{ areaWhy('strengths') }}</p><p>{{ areas(p).areas.strengths[lang.lang()] }}</p></article>
+              <article class="la-item"><h3>{{ lang.lang() === 'he' ? 'אתגרים' : 'Challenges' }}</h3><p class="la-why">{{ areaWhy('challenges') }}</p><p>{{ areas(p).areas.challenges[lang.lang()] }}</p></article>
+            </div>
+          </section>
+          <button type="button" class="share-btn share-btn-block" (click)="openShare()">
+            <ion-icon name="share-outline" aria-hidden="true"></ion-icon>
+            {{ lang.lang() === 'he' ? 'שיתוף' : 'Share' }}
+          </button>
+
+          <dialog class="map-dialog share-dialog" #shareDlg (click)="shareBackdrop($event)">
+            <div class="map-dialog-bar">
+              <h2>{{ lang.lang() === 'he' ? 'שיתוף המפה' : 'Share this chart' }}</h2>
+              <button type="button" class="map-close" (click)="closeShare()" [attr.aria-label]="lang.lang() === 'he' ? 'סגירה' : 'Close'">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              </button>
+            </div>
+            <div class="share-list">
+              @for (item of shareLinks(p); track item.id) {
+                <a class="share-row" [href]="item.href" target="_blank" rel="noopener noreferrer">
+                  <span class="share-mark" [style.background]="item.color" [innerHTML]="item.icon"></span>
+                  <span class="share-name">{{ item.label }}</span>
+                </a>
+              }
+              <button type="button" class="share-row" (click)="copyShare(p)">
+                <span class="share-mark copy" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M8 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2V9a2 2 0 0 0-2-2H8zm-2 4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2H6z"/></svg>
+                </span>
+                <span class="share-name">{{ copied ? (lang.lang() === 'he' ? 'הטקסט הועתק' : 'Text copied') : (lang.lang() === 'he' ? 'העתקת הטקסט' : 'Copy text') }}</span>
+              </button>
+              @if (canNative) {
+                <button type="button" class="share-row" (click)="nativeShare(p)">
+                  <span class="share-mark more" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path fill="currentColor" d="M13 5.5V16l4.2-4.2 1.4 1.4L12 19.9 5.4 13.2l1.4-1.4L11 16V5.5h2zM5 21h14v-2H5v2z"/></svg>
+                  </span>
+                  <span class="share-name">{{ lang.lang() === 'he' ? 'עוד אפליקציות' : 'More apps' }}</span>
+                </button>
+              }
+            </div>
+          </dialog>
+        </div>
+      }
+    }
+
+    @if (tab === 'gifts') {
+      <section class="s-block">
+        <p class="s-kicker">✦ {{ lang.lang() === 'he' ? 'הכול בחינם' : 'All of it free' }}</p>
+        <h2>{{ lang.lang() === 'he' ? 'מה נפתח במפה' : 'What the chart opens' }}</h2>
+        <p>{{ txt(sanctuary.freeLine) }}</p>
+        <div class="atlas-perks">
+          @for (perk of sanctuary.perks; track perk.title.en) {
+            <article>
+              <span>{{ perk.mark }}</span>
+              <b>{{ txt(perk.title) }}</b>
+              <small>{{ txt(perk.text) }}</small>
             </article>
           }
         </div>
-      }
-
-      <div class="systems">
-        <article class="sys">
-          <h3><ion-icon name="star-outline" aria-hidden="true"></ion-icon> {{ lang.text().hebrewSign }}</h3>
-          <p class="val">{{ p.hebrew.sign.name[lang.lang()] }} {{ p.hebrew.sign.symbol }}</p>
-          <p class="sub">{{ lang.text().hebrewBorn(p.hebrew.formatted[lang.lang()], p.hebrew.month.tribe[lang.lang()]) }}</p>
-          <p>{{ hebrewBody(p) }}</p>
-          <p class="gives">{{ hebrewGives(p) }}</p>
-        </article>
-        <article class="sys">
-          <h3><ion-icon name="paw-outline" aria-hidden="true"></ion-icon> {{ lang.text().chineseSign }}</h3>
-          <p class="val">{{ p.chinese.animal.name[lang.lang()] }}</p>
-          <p class="sub">{{ lang.lang() === 'he' ? 'שנת ' + p.chinese.chineseYear : 'Year ' + p.chinese.chineseYear }}</p>
-          <p>{{ chineseBody(p) }}</p>
-          <p class="gives">{{ chineseGives() }}</p>
-        </article>
-        <article class="sys">
-          <h3><ion-icon name="calculator-outline" aria-hidden="true"></ion-icon> {{ lang.text().lifePath }}</h3>
-          <p class="val">{{ p.lifePath }} — {{ life(p).title[lang.lang()] }}</p>
-          <p>{{ life(p).text[lang.lang()] }}</p>
-          <p class="gives">{{ lifeGives(p) }}</p>
-        </article>
-        <article class="sys">
-          <h3><ion-icon name="text-outline" aria-hidden="true"></ion-icon> {{ lang.text().nameNumber }}</h3>
-          <p class="val">{{ p.nameNum.number }} — {{ nameNum(p).title[lang.lang()] }}</p>
-          <p>{{ nameBody(p) }}</p>
-          <p class="gives">{{ nameGives(p) }}</p>
-        </article>
-        <article class="sys">
-          <h3><ion-icon name="leaf-outline" aria-hidden="true"></ion-icon> {{ lang.text().celtic }}</h3>
-          <p class="val">{{ p.celtic.name[lang.lang()] }}</p>
-          <p>{{ p.celtic.text[lang.lang()] }}</p>
-          <p class="gives">{{ celticGives() }}</p>
-        </article>
-        <article class="sys">
-          <h3><ion-icon name="sparkles-outline" aria-hidden="true"></ion-icon> {{ lang.text().birthCard }}</h3>
-          <p class="val">{{ p.tarot.roman }} — {{ p.tarot.name[lang.lang()] }}</p>
-          <p>{{ p.tarot.upright[lang.lang()] }}</p>
-          <p class="gives">{{ tarotGives() }}</p>
-        </article>
-        <article class="sys">
-          <h3><ion-icon name="diamond-outline" aria-hidden="true"></ion-icon> {{ lang.text().stoneFlower }}</h3>
-          <p class="val"><span class="swatch" [style.background]="p.birth.color"></span>{{ p.birth.stone[lang.lang()] }}</p>
-          <p class="sub">{{ lang.text().flowerOf(p.birth.flower[lang.lang()]) }}</p>
-          <p>{{ stoneBody(p) }}</p>
-          <p class="gives">{{ stoneGives() }}</p>
-        </article>
-      </div>
-
-      <section class="la">
-        <h2 class="section-label">{{ lang.lang() === 'he' ? 'איפה זה פוגש את החיים — ' + p.western.name.he : 'Where this meets life — ' + p.western.name.en }}</h2>
-        <p class="sky-lead">{{ lang.lang() === 'he' ? 'השורה הראשונה בכל תחום היא לפי מזל השמש: הסגנון היומי. בקריירה ובאהבה יש גם שורה לפי מספר החיים: לאן זה הולך לאורך שנים. אם הן לא אותו דבר, שתיהן נכונות.' : 'The first line in each area is the Sun sign: the daily style. Career and love also have a line from the life-path number: where it goes over years. If they differ, both are true.' }}</p>
-        <div class="la-grid">
-          <article class="la-item"><h3>{{ lang.lang() === 'he' ? 'קריירה' : 'Career' }}</h3><p class="la-why">{{ areaWhy('career') }}</p><p>{{ areas(p).areas.career[lang.lang()] }}</p><p class="la-extra">{{ lifePathCareer(p) }}</p></article>
-          <article class="la-item"><h3>{{ lang.lang() === 'he' ? 'כסף' : 'Money' }}</h3><p class="la-why">{{ areaWhy('money') }}</p><p>{{ areas(p).areas.money[lang.lang()] }}</p></article>
-          <article class="la-item"><h3>{{ lang.lang() === 'he' ? 'אהבה' : 'Love' }}</h3><p class="la-why">{{ areaWhy('love') }}</p><p>{{ areas(p).areas.love[lang.lang()] }}</p><p class="la-extra">{{ lifePathLove(p) }}</p></article>
-          <article class="la-item"><h3>{{ lang.lang() === 'he' ? 'בריאות' : 'Health' }}</h3><p class="la-why">{{ areaWhy('health') }}</p><p>{{ areas(p).areas.health[lang.lang()] }}</p><p>{{ healthExtra(p) }}</p></article>
-          <article class="la-item"><h3>{{ lang.lang() === 'he' ? 'חוזקות' : 'Strengths' }}</h3><p class="la-why">{{ areaWhy('strengths') }}</p><p>{{ areas(p).areas.strengths[lang.lang()] }}</p></article>
-          <article class="la-item"><h3>{{ lang.lang() === 'he' ? 'אתגרים' : 'Challenges' }}</h3><p class="la-why">{{ areaWhy('challenges') }}</p><p>{{ areas(p).areas.challenges[lang.lang()] }}</p></article>
+        <ol class="atlas-gifts">
+          @for (gift of sanctuary.gifts; track gift.n) {
+            <li>
+              <span class="atlas-n">{{ gift.n }}</span>
+              <div>
+                <h3>{{ txt(gift.title) }}</h3>
+                <p>{{ txt(gift.text) }}</p>
+                <p class="atlas-note">{{ txt(gift.note) }}</p>
+              </div>
+            </li>
+          }
+        </ol>
+        <div class="s-jump">
+          <button type="button" (click)="setTab('map')">{{ lang.lang() === 'he' ? 'לבניית המפה' : 'Build the chart' }}</button>
+          <a class="ghost" routerLink="/charts/natal" [queryParams]="lang.lang() === 'en' ? { lang: 'en' } : null">{{ lang.lang() === 'he' ? 'למפה המלאה' : 'The full chart' }}</a>
         </div>
       </section>
-      <button type="button" class="share-btn share-btn-block" (click)="openShare()">
-        <ion-icon name="share-outline" aria-hidden="true"></ion-icon>
-        {{ lang.lang() === 'he' ? 'שיתוף' : 'Share' }}
-      </button>
+    }
 
-      <dialog class="map-dialog share-dialog" #shareDlg (click)="shareBackdrop($event)">
-        <div class="map-dialog-bar">
-          <h2>{{ lang.lang() === 'he' ? 'שיתוף המפה' : 'Share this chart' }}</h2>
-          <button type="button" class="map-close" (click)="closeShare()" [attr.aria-label]="lang.lang() === 'he' ? 'סגירה' : 'Close'">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          </button>
-        </div>
-        <div class="share-list">
-          @for (item of shareLinks(p); track item.id) {
-            <a class="share-row" [href]="item.href" target="_blank" rel="noopener noreferrer">
-              <span class="share-mark" [style.background]="item.color" [innerHTML]="item.icon"></span>
-              <span class="share-name">{{ item.label }}</span>
-            </a>
+    @if (tab === 'about') {
+      <section class="s-block">
+        <p class="s-kicker">☽ {{ lang.lang() === 'he' ? 'אודות' : 'About' }}</p>
+        <h2>{{ lang.lang() === 'he' ? 'מפה אישית, מכמה מסורות' : 'A personal chart, from several traditions' }}</h2>
+        @for (section of sanctuary.about; track section.title.en) {
+          <article class="atlas-about">
+            <h3>{{ txt(section.title) }}</h3>
+            <p>{{ txt(section.text) }}</p>
+          </article>
+        }
+      </section>
+    }
+
+    @if (tab === 'faq') {
+      <section class="s-block">
+        <p class="s-kicker">? {{ lang.lang() === 'he' ? 'שאלות נפוצות' : 'Common questions' }}</p>
+        <h2>{{ lang.lang() === 'he' ? 'לפני שמקלידים תאריך' : 'Before you type a date' }}</h2>
+        <div class="s-faq">
+          @for (item of sanctuary.faq; track item.q.en; let i = $index) {
+            <div class="s-faq-item" [class.on]="faqOpen === i">
+              <button type="button" (click)="toggleFaq(i)" [attr.aria-expanded]="faqOpen === i">
+                <span>{{ txt(item.q) }}</span>
+                <span aria-hidden="true">{{ faqOpen === i ? '–' : '+' }}</span>
+              </button>
+              @if (faqOpen === i) { <p>{{ txt(item.a) }}</p> }
+            </div>
           }
-          <button type="button" class="share-row" (click)="copyShare(p)">
-            <span class="share-mark copy" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path fill="currentColor" d="M8 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2V9a2 2 0 0 0-2-2H8zm-2 4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2H6z"/></svg>
-            </span>
-            <span class="share-name">{{ copied ? (lang.lang() === 'he' ? 'הטקסט הועתק' : 'Text copied') : (lang.lang() === 'he' ? 'העתקת הטקסט' : 'Copy text') }}</span>
-          </button>
-          @if (canNative) {
-            <button type="button" class="share-row" (click)="nativeShare(p)">
-              <span class="share-mark more" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M13 5.5V16l4.2-4.2 1.4 1.4L12 19.9 5.4 13.2l1.4-1.4L11 16V5.5h2zM5 21h14v-2H5v2z"/></svg>
-              </span>
-              <span class="share-name">{{ lang.lang() === 'he' ? 'עוד אפליקציות' : 'More apps' }}</span>
-            </button>
-          }
         </div>
-      </dialog>
-    </div>
-  }
+      </section>
+    }
+  </div>
 </app-screen>

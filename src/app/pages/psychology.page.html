@@ -143,10 +143,35 @@
             <app-score-bar [label]="axisRow(i).name" [value]="axisRow(i).pct" [hint]="axisRow(i).note"></app-score-bar>
           }
         </div>
+        <p class="psy-note">{{ t('עוצמת ההעדפה בכל ציר:', 'Strength of preference on each axis:') }}
+          @for (axis of axes; track axis.a; let i = $index) { <span> {{ axis.name[lang.lang()] }}: {{ axisBand(i) }}{{ i < 3 ? ' ·' : '' }}</span> }
+        </p>
+
+        <h2>{{ t('במבט כללי', 'Overview') }}</h2>
+        <p>{{ mbtiOverview() }}</p>
+
+        <h2>{{ t('הפונקציות הקוגניטיביות', 'Cognitive functions') }}</h2>
+        <p>{{ t('לפי המודל, לכל טיפוס יש סדר קבוע של דרכי חשיבה. הראשונה היא החזקה והטבעית ביותר, והאחרונה היא הפחות מפותחת.', 'In the model each type has a fixed order of ways of thinking. The first is the strongest and most natural, the last the least developed.') }}</p>
+        <ul>@for (f of mbtiStack(); track f.code) { <li><b>{{ f.role }} · {{ f.code }}</b>: {{ f.text }}</li> }</ul>
+
+        <h2>{{ t('איך זה נראה ביומיום', 'What it looks like day to day') }}</h2>
+        <ul>@for (item of mbtiList('daily'); track item) { <li>{{ item }}</li> }</ul>
         <h2>{{ t('חוזקות אפשריות', 'Possible strengths') }}</h2>
+        <ul>@for (item of mbtiList('strengths'); track item) { <li>{{ item }}</li> }</ul>
         <ul>@for (item of strengths(); track item) { <li>{{ item }}</li> }</ul>
+        <h2>{{ t('אתגרים', 'Challenges') }}</h2>
+        <ul>@for (item of mbtiList('challenges'); track item) { <li>{{ item }}</li> }</ul>
         <h2>{{ t('נקודות שכדאי לשים לב אליהן', 'Points worth noticing') }}</h2>
         <ul>@for (item of watchouts(); track item) { <li>{{ item }}</li> }</ul>
+
+        <h2>{{ t('במערכות יחסים', 'In relationships') }}</h2>
+        <p>{{ mbtiText('relationships') }}</p>
+        <h2>{{ t('בעבודה ובקריירה', 'At work and in career') }}</h2>
+        <p>{{ mbtiText('work') }}</p>
+        <h2>{{ t('בלחץ', 'Under stress') }}</h2>
+        <p>{{ mbtiText('stress') }}</p>
+        <h2>{{ t('כיוון לצמיחה', 'A direction for growth') }}</h2>
+        <ul>@for (item of mbtiList('tips'); track item) { <li>{{ item }}</li> }</ul>
         <app-disclaimer [text]="t('התוצאה אינה אבחון מקצועי. היא משקפת את התשובות שסימנת במבחן המקוצר, ויכולה להצביע על נטייה — לא על עובדה קבועה.', 'The result is not a professional diagnosis. It reflects the answers you marked on this short test, and can point to a tendency rather than a fixed fact.')"></app-disclaimer>
         <div class="psy-actions">
           <button type="button" class="psy-cta" (click)="share()">{{ copied ? t('הטקסט הועתק', 'Text copied') : t('שתף תוצאה', 'Share result') }}</button>
@@ -169,12 +194,56 @@
             <app-score-bar [label]="t('טיפוס', 'Type') + ' ' + row.type + ' · ' + ennName(row.type)" [value]="row.pct" [color]="row.type === enn.type ? 'var(--psy-primary)' : '#b7c0d0'"></app-score-bar>
           }
         </div>
+        <p class="psy-note">{{ t('איך לקרוא את הציונים: כל אחוז הוא ממוצע ההסכמה שלך עם הטענות של אותו טיפוס (0% = לא מסכים בכלל, 100% = מסכים מאוד). הציונים אינם מתחלקים בין הטיפוסים, ולכן כמה טיפוסים יכולים להיות גבוהים יחד.', 'How to read the scores: each percentage is your average agreement with the statements of that type (0% = strongly disagree, 100% = strongly agree). The scores are not split between types, so several types can be high together.') }}</p>
+        <p>{{ ennSpread() }}</p>
+
+        <h2>{{ t('במבט כללי', 'Overview') }}</h2>
+        <p>{{ ennOverview() }}</p>
+        <p><b>{{ t('מרכז:', 'Center:') }}</b> {{ ennCenterName() }}. {{ ennCenterText() }}</p>
+
         <h2>{{ t('המוטיבציה המרכזית', 'The central motivation') }}</h2>
         <p>{{ t('עשוי להתאים לרצון', 'This may fit a wish') }} {{ ennDesire() }}.</p>
         <h2>{{ t('הפחד המרכזי', 'The central fear') }}</h2>
         <p>{{ t('יכול להצביע על חשש', 'This can point to a concern about') }} {{ ennFear() }}.</p>
         <h2>{{ t('מה עשוי לאפיין את הטיפוס', 'What might mark the type') }}</h2>
         <p>{{ ennMark() }}</p>
+
+        <h2>{{ t('איך זה נראה ביומיום', 'What it looks like day to day') }}</h2>
+        <ul>@for (item of ennList('daily'); track item) { <li>{{ item }}</li> }</ul>
+        <h2>{{ t('חוזקות', 'Strengths') }}</h2>
+        <ul>@for (item of ennList('strengths'); track item) { <li>{{ item }}</li> }</ul>
+        <h2>{{ t('אתגרים ונקודות עיוורות', 'Challenges and blind spots') }}</h2>
+        <ul>@for (item of ennList('challenges'); track item) { <li>{{ item }}</li> }</ul>
+
+        <h2>{{ t('במערכות יחסים', 'In relationships') }}</h2>
+        <p>{{ ennRelationships() }}</p>
+        <h2>{{ t('בעבודה ובקריירה', 'At work and in career') }}</h2>
+        <p>{{ ennWork() }}</p>
+
+        @if (ennWing(); as w) {
+          <h2>{{ t('הכנף שלך', 'Your wing') }}</h2>
+          <p>{{ t('הכנף היא אחד משני הטיפוסים השכנים, שמוסיף צבע לטיפוס הדומיננטי. לפי הציונים שלך הכנף הקרובה יותר היא:', 'The wing is one of the two neighboring types that adds color to the dominant one. By your scores the closer wing is:') }}</p>
+          <p><b>{{ w.title }}</b> ({{ w.pct }}%)</p>
+          <p>{{ w.text }}</p>
+          @if (ennOtherWing(); as o) {
+            <p><b>{{ o.title }}</b></p>
+            <p>{{ o.text }}</p>
+          }
+        }
+
+        <h2>{{ t('בלחץ ובצמיחה', 'Under stress and in growth') }}</h2>
+        @if (ennArrow('stress'); as s) {
+          <p><b>{{ t('כיוון הלחץ', 'Stress direction') }}: {{ t('טיפוס', 'Type') }} {{ s.type }} · {{ s.name }}</b> ({{ s.pct }}%)</p>
+          <p>{{ s.text }}</p>
+        }
+        @if (ennArrow('growth'); as g) {
+          <p><b>{{ t('כיוון הצמיחה', 'Growth direction') }}: {{ t('טיפוס', 'Type') }} {{ g.type }} · {{ g.name }}</b> ({{ g.pct }}%)</p>
+          <p>{{ g.text }}</p>
+        }
+
+        <h2>{{ t('כיוון לצמיחה', 'A direction for growth') }}</h2>
+        <p>{{ ennGrowthHint() }}</p>
+        <ul>@for (item of ennList('tips'); track item) { <li>{{ item }}</li> }</ul>
         <app-disclaimer [text]="t('הציון הגבוה ביותר מייצג את הטיפוס הדומיננטי לפי הגרסה המקוצרת הזו. זה אינו אבחון פסיכולוגי.', 'The highest score is the dominant type on this short version. This is not a psychological diagnosis.')"></app-disclaimer>
         <div class="psy-actions">
           <button type="button" class="psy-cta" (click)="share()">{{ copied ? t('הטקסט הועתק', 'Text copied') : t('שתף תוצאה', 'Share result') }}</button>
@@ -203,6 +272,18 @@
             <p><span [style.background]="traitColor(trait.key)"></span>{{ trait.name[lang.lang()] }} <b>{{ big[trait.key] }}</b></p>
           }
         </article>
+        <p class="psy-note">{{ t('איך לקרוא: כל תכונה נמצאת על רצף מ-0 עד 100. אין ציון "טוב" או "רע", כל אחד מהם יתרונות ואתגרים משלו. ציון בין 40 ל-66 נחשב בינוני.', 'How to read: each trait is on a range from 0 to 100. No score is "good" or "bad"; each has its own strengths and challenges. A score from 40 to 66 counts as middle.') }}</p>
+        <p>{{ bfSummary() }}</p>
+        @for (trait of traits; track trait.key) {
+          <h2>{{ trait.name[lang.lang()] }} · {{ big[trait.key] }} · {{ traitBand(big[trait.key]) }}</h2>
+          <p><b>{{ t('מה זה מודד:', 'What it measures:') }}</b> {{ trait.what[lang.lang()] }}</p>
+          <p><b>{{ t('היבטים:', 'Facets:') }}</b> {{ bfFacets(trait.key) }}</p>
+          <p><b>{{ t('בחיים:', 'In life:') }}</b> {{ bfText(trait.key, 'life') }}</p>
+          <p><b>{{ t('בעבודה:', 'At work:') }}</b> {{ bfText(trait.key, 'work') }}</p>
+          <p><b>{{ t('ביחסים:', 'In relationships:') }}</b> {{ bfText(trait.key, 'love') }}</p>
+          <p><b>{{ t('כיוון לצמיחה:', 'Direction for growth:') }}</b></p>
+          <ul>@for (item of bfTips(trait.key); track item) { <li>{{ item }}</li> }</ul>
+        }
         <app-disclaimer [text]="disclaimer()"></app-disclaimer>
         <div class="psy-actions">
           <button type="button" class="psy-cta" (click)="share()">{{ copied ? t('הטקסט הועתק', 'Text copied') : t('שתף תוצאה', 'Share result') }}</button>

@@ -1,8 +1,21 @@
 import { Component, inject, input } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular';
 import { LangService } from '../lang.service';
 import { DeskNavComponent } from './site-nav.component';
+
+function motifOf(url: string): string {
+  if (url.includes('/tarot')) return 'tarot';
+  if (url.includes('/charts')) return 'charts';
+  if (url.includes('/pair')) return 'pair';
+  if (url.includes('/kabbalah')) return 'tree';
+  if (url.includes('/psychology')) return 'psy';
+  if (url.includes('/zohar')) return 'zohar';
+  if (url.includes('/graphology')) return 'ink';
+  if (url.includes('/hd')) return 'hd';
+  if (url.includes('/more')) return 'more';
+  return 'me';
+}
 
 @Component({
   selector: 'app-screen',
@@ -29,6 +42,9 @@ import { DeskNavComponent } from './site-nav.component';
       <app-desk-nav></app-desk-nav>
     </ion-header>
     <ion-content>
+      <div class="night-veil" [attr.data-motif]="motif" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+      </div>
       <div class="wrap">
         <ng-content></ng-content>
       </div>
@@ -39,4 +55,8 @@ export class ScreenComponent {
   readonly title = input('');
   readonly back = input<string | null>(null);
   readonly lang = inject(LangService);
+  /** תנועת הרקע של המסך הנוכחי */
+  readonly motif = motifOf(inject(Router).url);
 }
+
+

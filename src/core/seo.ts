@@ -42,8 +42,8 @@ export const SEO_PAGES: SeoPage[] = [
       en: 'Birth chart by date | Sign, numerology and name',
     },
     description: {
-      he: 'שם ותאריך לידה מספיקים למזל המערבי, המזל העברי, המזל הסיני, מספר דרך החיים, מספר השם, העץ הקלטי וקלף הלידה.',
-      en: 'A name and birth date give your Western, Hebrew and Chinese signs, life path number, name number, Celtic tree and birth card.',
+      he: 'שם ותאריך פותחים מזל מערבי, מזל עברי, שנה סינית, מספר דרך החיים, מספר השם, עץ קלטי וקלף לידה. שעה ומקום מוסיפים ירח ומזל עולה. הכול בחינם, בלי חשבון.',
+      en: 'A name and a date open the Western sign, Hebrew sign, Chinese year, life path, name number, Celtic tree and birth card. A time and a place add the Moon and the rising sign. All of it is free, with no account.',
     },
     crumb: { he: 'המפה שלי', en: 'My chart' },
     priority: '0.9',
@@ -182,8 +182,8 @@ export const SEO_PAGES: SeoPage[] = [
       en: 'Tarot online | A Major Arcana draw',
     },
     description: {
-      he: '22 קלפי הארקנה הגדולה. מערבבים, שולפים קלף אחד או שלושה (עבר, הווה, עתיד) וקוראים גם קלף הפוך.',
-      en: 'The 22 Major Arcana. Shuffle, draw one card or three (past, present, future), and read reversals too.',
+      he: '22 קלפי הארקנה הגדולה: קלף יומי, פריסה לפי שאלה, ופירוש לפי המקום של כל קלף. במכשיר, בלי הרשמה.',
+      en: 'The 22 Major Arcana: a daily card, a spread for your question, and a reading by each card’s place. On your device, with no account.',
     },
     crumb: { he: 'טארוט', en: 'Tarot' },
     priority: '0.9',
@@ -196,8 +196,8 @@ export const SEO_PAGES: SeoPage[] = [
       en: 'Kabbalah and the Tree of Life | Sephiroth by birth date',
     },
     description: {
-      he: 'עץ החיים, עשר הספירות ו-22 הנתיבים. ספירת דרך החיים, ספירת השם, והאות של חודש הלידה העברי.',
-      en: 'The Tree of Life, ten Sephiroth and 22 paths. Your life-path Sephira, name Sephira, and the letter of your Hebrew birth month.',
+      he: 'עץ החיים, עשר הספירות ו-22 הנתיבים. ספירה אישית, ומפת נשמות זוגית לפי שם, תאריך וחודש עברי.',
+      en: 'The Tree of Life, ten Sephiroth and 22 paths. A personal sephira, and a couple’s soul map from name, date and Hebrew month.',
     },
     crumb: { he: 'קבלה', en: 'Kabbalah' },
     priority: '0.8',

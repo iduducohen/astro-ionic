@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, ElementRef, inject, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IonIcon } from '@ionic/angular';
+import { PAGE_INFO } from '../../core/page-info';
 import { TOOL_INFO } from '../../core/tool-info';
 import { LangService } from '../lang.service';
-import { IntroComponent } from '../shell/intro.component';
 import { ScreenComponent } from '../shell/screen.component';
 
 export const TOOLS = ['natal', 'karmic', 'forecast', 'synastry', 'horary', 'election', 'mundane'] as const;
@@ -16,26 +16,41 @@ const ICONS: Record<Tool, string> = {
 
 @Component({
   selector: 'app-charts',
-  imports: [ScreenComponent, IntroComponent, RouterLink, IonIcon],
+  imports: [ScreenComponent, RouterLink, IonIcon],
   template: `
     <app-screen [title]="lang.text().tabCharts">
-      <app-intro page="charts" [heading]="lang.lang() === 'he' ? 'מפות אסטרולוגיות' : 'Astrology charts'"></app-intro>
-      <div class="tool-list" role="list">
-        @for (k of tools; track k) {
-          <div class="tool-row" role="listitem">
-            <a class="tool-go" [routerLink]="'/charts/' + k" [queryParams]="query()">
-              <span class="tool-icon" aria-hidden="true"><ion-icon [name]="icon(k)"></ion-icon></span>
-              <span class="tool-copy">
-                <span class="tool-name">{{ lang.text().tools[k] }}</span>
-                <span class="tool-desc">{{ lang.text().toolDesc[k] }}</span>
-              </span>
-              <span class="tool-chev" aria-hidden="true">‹</span>
-            </a>
-            <button type="button" class="tool-info" (click)="openInfo(k)">
-              {{ lang.lang() === 'he' ? 'מידע נוסף' : 'More info' }}
-            </button>
-          </div>
-        }
+      <div class="sanctuary sky-charts">
+      <header class="s-hero">
+        <div class="sky" aria-hidden="true">
+          @for (i of stars; track i) { <span class="star" [style.--n]="i"></span> }
+        </div>
+        <p class="s-kicker">✦ {{ lang.lang() === 'he' ? 'אסטרולוגיה' : 'Astrology' }}</p>
+        <h1>{{ lang.lang() === 'he' ? 'השמיים המחושבים' : 'The calculated sky' }}</h1>
+        <p class="s-lead">{{ page.summary[lang.lang()] }}</p>
+        <ul class="s-facts">
+          @for (fact of page.facts; track fact.en) { <li>{{ fact[lang.lang()] }}</li> }
+        </ul>
+      </header>
+      @for (group of groups; track group.he) {
+        <h2 class="tool-group">{{ lang.lang() === 'he' ? group.he : group.en }}</h2>
+        <div class="tool-list" role="list">
+          @for (k of group.tools; track k) {
+            <div class="tool-row" role="listitem">
+              <a class="tool-go" [routerLink]="'/charts/' + k" [queryParams]="query()">
+                <span class="tool-icon" aria-hidden="true"><ion-icon [name]="icon(k)"></ion-icon></span>
+                <span class="tool-copy">
+                  <span class="tool-name">{{ lang.text().tools[k] }}</span>
+                  <span class="tool-desc">{{ lang.text().toolDesc[k] }}</span>
+                </span>
+                <span class="tool-chev" aria-hidden="true">‹</span>
+              </a>
+              <button type="button" class="tool-info" (click)="openInfo(k)">
+                {{ lang.lang() === 'he' ? 'מידע נוסף' : 'More info' }}
+              </button>
+            </div>
+          }
+        </div>
+      }
       </div>
 
       <dialog class="map-dialog" #dlg (close)="info = null" (click)="backdrop($event)">
@@ -88,7 +103,14 @@ export class ChartsPage {
   readonly lang = inject(LangService);
   private readonly cd = inject(ChangeDetectorRef);
   private readonly dlg = viewChild<ElementRef<HTMLDialogElement>>('dlg');
-  readonly tools = TOOLS;
+  readonly page = PAGE_INFO.charts;
+  readonly stars = Array.from({ length: 18 }, (_, i) => i);
+  readonly groups: { he: string; en: string; tools: Tool[] }[] = [
+    { he: 'עליי', en: 'About you', tools: ['natal', 'karmic', 'forecast'] },
+    { he: 'שני אנשים', en: 'Two people', tools: ['synastry'] },
+    { he: 'שאלה או מועד', en: 'A question or a time', tools: ['horary', 'election'] },
+    { he: 'העולם', en: 'The world', tools: ['mundane'] },
+  ];
   info: Tool | null = null;
 
   icon(tool: string): string { return ICONS[tool as Tool]; }

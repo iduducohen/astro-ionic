@@ -11,16 +11,18 @@ import { AREA_WHY, CN_ELEMENT, CN_POLE, MOON_NEED, NUMBER_USE, RISE_FACE, STONE_
 import { pageUrlForShare, setSharePreview } from '../../core/seo';
 import { SHARE_CHANNELS } from '../../core/share-channels';
 import { profileShareText, profileShortText } from '../../core/share-text';
+import { CHART_SANCTUARY } from '../../core/chart-sanctuary';
 import { LangService } from '../lang.service';
 import { readProfile } from '../profile';
-import { IntroComponent } from '../shell/intro.component';
 import { ScreenComponent } from '../shell/screen.component';
 import { WhenFieldComponent } from '../shell/when-field.component';
 import { loadJSON, saveJSON } from '../storage';
 
+type AtlasTab = 'map' | 'gifts' | 'about' | 'faq';
+
 @Component({
   selector: 'app-profile',
-  imports: [ScreenComponent, IntroComponent, RouterLink, WhenFieldComponent, IonButton, IonCheckbox, IonInput, IonNote, IonIcon],
+  imports: [ScreenComponent, RouterLink, WhenFieldComponent, IonButton, IonCheckbox, IonInput, IonNote, IonIcon],
   templateUrl: './profile.page.html',
 })
 export class ProfilePage {
@@ -31,8 +33,12 @@ export class ProfilePage {
   private readonly shareDlg = viewChild<ElementRef<HTMLDialogElement>>('shareDlg');
   copied = false;
   canNative = typeof navigator !== 'undefined' && !!navigator.share;
+  readonly sanctuary = CHART_SANCTUARY;
+  readonly stars = Array.from({ length: 18 }, (_, i) => i);
   readonly today = new Date().toISOString().slice(0, 10);
   readonly signs = ZODIAC;
+  tab: AtlasTab = 'map';
+  faqOpen: number | null = null;
   readonly countries = COUNTRY_CODES;
   name = '';
   birth = '';
@@ -78,7 +84,7 @@ export class ProfilePage {
         });
       }
       this.cd.detectChanges();
-      document.querySelector('.result')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      void this.revealResult();
     } catch (err) {
       this.profile.set(null);
       this.sky = [];
@@ -95,6 +101,34 @@ export class ProfilePage {
     this.timeKnown = true;
     this.placeId = '';
     this.submit(new Event('submit'));
+  }
+
+  txt(value: { he: string; en: string }): string { return value[this.lang.lang()]; }
+
+  setTab(tab: AtlasTab): void {
+    this.tab = tab;
+    const ion = document.querySelector('ion-content') as (HTMLElement & { scrollToTop?: (ms?: number) => void }) | null;
+    ion?.scrollToTop?.(0);
+  }
+
+  toggleFaq(index: number): void {
+    this.faqOpen = this.faqOpen === index ? null : index;
+  }
+
+  go(id: string): void {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  private async revealResult(): Promise<void> {
+    const ion = document.querySelector('ion-content') as (HTMLElement & { getScrollElement?: () => Promise<HTMLElement> }) | null;
+    const el = document.querySelector('.result');
+    if (!el) return;
+    if (!ion?.getScrollElement) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+    const sc = await ion.getScrollElement();
+    sc.scrollTo({ top: el.getBoundingClientRect().top + sc.scrollTop - 12, behavior: 'smooth' });
   }
 
   countryName(cc: string): string { return countryLabel(cc, this.lang.lang()); }

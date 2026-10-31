@@ -34,6 +34,57 @@ assert.equal(A.MAJOR_ARCANA.length, 22);
 A.MAJOR_ARCANA.forEach((c, i) => { assert.equal(c.n, i); if (c.signId) assert.ok(A.ZODIAC.some((z) => z.id === c.signId)); });
 check({ t: A.MAJOR_ARCANA, s: A.SPREAD_POSITIONS });
 assert.equal(p.tarot.n, 10); // 15.3.1990 → 28 → 10
+assert.equal(A.SANCTUARY.practices.length, 22);
+assert.equal(A.dailyCardIndex(new Date(2026, 9, 27)), A.dailyCardIndex(new Date(2026, 9, 27, 23, 59)));
+assert.ok(A.dailyCardIndex(new Date(2026, 0, 1)) >= 0 && A.dailyCardIndex(new Date(2026, 0, 1)) < 22);
+check({ sanctuary: A.SANCTUARY });
+assert.equal(A.CHART_SANCTUARY.gifts.length, 13);
+assert.equal(A.CHART_SANCTUARY.perks.length, 4);
+assert.equal(A.CHART_SANCTUARY.faq.length, 7);
+check({ chart: A.CHART_SANCTUARY });
+const dates = { a: '1990-03-15', b: '1992-07-30' };
+const pair = A.pairDestiny(p, q, null, dates, new Date(2026, 9, 27));
+assert.equal(pair.methods.length, 5);
+assert.equal(pair.forecasts.length, 6);
+assert.equal(pair.tales.length, 4);
+assert.equal(pair.cards.length, 4);
+assert.equal(pair.insights.length, 3);
+assert.equal(pair.cards[0].n, A.pairDestiny(p, q, null, dates).cards[0].n);
+check({ pair });
+const souls = A.treeLove(
+  { name: 'נועה לוי', birth: '1990-03-15', sunset: false },
+  { name: 'דניאל כהן', birth: '1992-07-30', sunset: false },
+);
+assert.equal(souls.people[0].life.id, 'keter');
+assert.equal(souls.people[1].life.id, 'chesed');
+assert.equal(souls.people[0].first?.letter, 'נ');
+assert.equal(souls.people[1].first?.letter, 'ד');
+assert.equal(souls.insights.length, 3);
+assert.equal(souls.people[0].nameFromHebrew, true);
+const leapSoul = A.treeLove(
+  { name: 'אביב', birth: '2024-03-20', sunset: false },
+  { name: 'בנימין', birth: '1990-03-15', sunset: false },
+);
+assert.equal(leapSoul.people[0].leapAdar, true);
+assert.equal(leapSoul.people[0].letter, 'ק');
+assert.match(leapSoul.months.he, /אדר א׳/);
+const sunsetSoul = A.treeLove(
+  { name: 'אביב', birth: '2000-09-29', sunset: false },
+  { name: 'בנימין', birth: '2000-10-01', sunset: false },
+);
+const afterSunset = A.treeLove(
+  { name: 'אביב', birth: '2000-09-29', sunset: true },
+  { name: 'בנימין', birth: '2000-10-01', sunset: false },
+);
+assert.notEqual(sunsetSoul.people[0].monthId, afterSunset.people[0].monthId);
+const latinSoul = A.treeLove(
+  { name: 'Noa', birth: '1990-03-15', sunset: false },
+  { name: 'Dan', birth: '1992-07-30', sunset: false },
+);
+assert.equal(latinSoul.people[0].nameFromHebrew, false);
+assert.equal(latinSoul.people[0].first, null);
+assert.match(latinSoul.names.attraction.he, /לטיני/);
+check({ souls, method: A.TREE_LOVE_METHOD });
 assert.equal(A.birthCard(1999, 9, 9).n, 10); // 1+9+9+9+9+9=46 → 10
 assert.equal(A.birthCard(2000, 1, 1).n, 4); assert.equal(A.birthCard(1989, 12, 29).n, 5); assert.equal(A.birthCard(1980, 1, 3).n, 0); // 22 → Fool
 for (let i = 0; i < 500; i++) {

@@ -29,13 +29,13 @@ export const PAGE_INFO: Record<PageKey, PageInfo> = {
   },
   charts: {
     summary: {
-      he: 'מפות אסטרולוגיות מלאות לפי תאריך, שעה ומקום לידה: מפת לידה, תחזית שנתית, התאמה זוגית, שאלה שעתית ועוד.',
-      en: 'Full astrological charts from date, time and place of birth: natal chart, yearly forecast, synastry, horary questions and more.',
+      he: 'כאן מחשבים את השמיים: כוכבים, בתים וזוויות, לפי תאריך, שעה ומקום. קרמה, תחזית, שאלה, מועד והעולם נמצאים רק בטאב הזה. מפת הלידה המלאה יושבת ליד «המפה שלי», והסינסטרי ליד «התאמה זוגית».',
+      en: 'This tab calculates the sky: planets, houses and aspects, from a date, a time and a place. Karma, forecast, a question, a chosen time and the world live only here. The full birth chart sits beside “My chart”, and synastry beside “Compatibility”.',
     },
     facts: [
-      { he: '7 סוגי מפות', en: '7 chart types' },
-      { he: 'מיקומי כוכבים מחושבים', en: 'Calculated planet positions' },
-      { he: 'ערים מכל העולם', en: 'Cities worldwide' },
+      { he: 'כוכבים, בתים וזוויות', en: 'Planets, houses and aspects' },
+      { he: 'לפי תאריך, שעה ומקום', en: 'From date, time and place' },
+      { he: 'חמש מפות רק כאן', en: 'Five charts only here' },
     ],
     more: [
       { title: { he: 'למה צריך שעה ומקום?', en: 'Why time and place?' }, text: { he: 'המזל העולה והבתים זזים כל כמה דקות ותלויים במיקום על פני כדור הארץ. בלי שעה מדויקת אפשר לראות את מיקומי הכוכבים במזלות, אבל לא את הבתים.', en: 'The rising sign and the houses shift every few minutes and depend on where on Earth you are. Without an exact time you still get planets in signs, but not houses.' } },
@@ -60,12 +60,12 @@ export const PAGE_INFO: Record<PageKey, PageInfo> = {
   },
   tarot: {
     summary: {
-      he: 'שליפה מתוך 22 קלפי הארקנה הגדולה. מערבבים את החבילה, שולפים קלף אחד או שלושה והופכים כל קלף כדי לקרוא את פירושו.',
-      en: 'A draw from the 22 Major Arcana. Shuffle the deck, draw one or three cards and turn each one over to read it.',
+      he: 'שליפה מתוך 22 קלפי הארקנה הגדולה. קלף יומי קבוע עד חצות, ופריסה לפי שאלה: קלף אחד, שלושה, זוגיות או עצה.',
+      en: 'A draw from the 22 Major Arcana. A daily card that stays until midnight, and a spread for a question: one card, three, a relationship, or guidance.',
     },
     facts: [
       { he: '22 קלפי ארקנה גדולה', en: '22 Major Arcana cards' },
-      { he: 'פריסת קלף אחד או שלושה', en: 'One or three card spread' },
+      { he: 'קלף יומי ותרגול קצר', en: 'A daily card and a short practice' },
       { he: 'קלפים הפוכים', en: 'Reversed cards' },
     ],
     more: [
@@ -94,13 +94,13 @@ export const PAGE_INFO: Record<PageKey, PageInfo> = {
   },
   kabbalah: {
     summary: {
-      he: 'עץ החיים ו-10 הספירות. לפי תאריך הלידה והשם שלך נמצא את הספירה של דרך החיים, את ספירת השם ואת האות והנתיב של חודש הלידה העברי.',
-      en: 'The Tree of Life and its 10 Sephiroth. From your birth date and name we find your life path Sephira, your name Sephira, and the letter and path of your Hebrew birth month.',
+      he: 'עץ החיים לאדם אחד ולזוג. מספר דרך החיים וגימטריית השם נפתחים לספירות, וחודש הלידה העברי לאות מתוך ספר יצירה. זו מפה פרשנית, לא פסיקה.',
+      en: 'The Tree of Life for one person and for a couple. A life-path number and the gematria of a name open into sephirot, and the Hebrew birth month into a letter from Sefer Yetzirah. An interpretive map, not a ruling.',
     },
     facts: [
       { he: '10 ספירות', en: '10 Sephiroth' },
       { he: '22 נתיבים ואותיות', en: '22 paths and letters' },
-      { he: '4 עולמות', en: '4 worlds' },
+      { he: 'מפת נשמות זוגית', en: 'A couple’s soul map' },
     ],
     more: [
       { title: { he: 'מה זה עץ החיים?', en: 'What is the Tree of Life?' }, text: { he: 'מפה של עשר ספירות, דרכן לפי הקבלה האור האלוהי יורד ומתגלה בעולם, מכתר (הרצון העליון) ועד מלכות (העולם הממשי). הספירות מסודרות בשלושה עמודים: חסד מימין, דין משמאל ורחמים באמצע.', en: 'A map of ten Sephiroth through which, in Kabbalah, divine light descends and becomes manifest, from Keter (the supreme will) to Malkuth (the physical world). They stand in three pillars: mercy on the right, severity on the left and balance in the middle.' } },

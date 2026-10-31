@@ -4,6 +4,9 @@ import {
   scoreBigFive, scoreEnneagram, scoreMbti,
   type Answers, type BfScore, type EnnScore, type MbtiScore, type Q, type TestId,
 } from '../../core/psychology';
+import { ENN_CENTER, ENN_CENTER_TEXT, ENN_DETAILS, type EnnDetail } from '../../core/enneagram-details';
+import { BF_DETAILS, bfBand } from '../../core/bigfive-details';
+import { MBTI_DETAILS, MBTI_FUNCTIONS, type MbtiDetail } from '../../core/mbti-details';
 import { LangService } from '../lang.service';
 import { AnswerScaleComponent, DisclaimerComponent, ProgressBarComponent, ScoreBarComponent, TestCardComponent } from '../psychology/psy-bits';
 import { ScreenComponent } from '../shell/screen.component';
@@ -357,6 +360,44 @@ export class PsychologyPage implements OnDestroy {
   strengths(): string[] { return this.mbti ? this.bits(MBTI_TYPES16[this.mbti.type].strengths[this.lang.lang()]) : []; }
   watchouts(): string[] { return this.mbti ? this.bits(MBTI_TYPES16[this.mbti.type].growth[this.lang.lang()]) : []; }
 
+  private mbtiD(): MbtiDetail | null { return this.mbti ? MBTI_DETAILS[this.mbti.type] ?? null : null; }
+  mbtiOverview(): string { return this.mbtiD()?.overview[this.lang.lang()] ?? ''; }
+  mbtiList(key: 'daily' | 'strengths' | 'challenges' | 'tips'): string[] { return this.mbtiD()?.[key][this.lang.lang()] ?? []; }
+  mbtiText(key: 'relationships' | 'work' | 'stress'): string { return this.mbtiD()?.[key][this.lang.lang()] ?? ''; }
+  mbtiStack(): { role: string; code: string; text: string }[] {
+    const d = this.mbtiD();
+    if (!d) return [];
+    const roles = [
+      this.t('דומיננטית', 'Dominant'), this.t('משנית', 'Auxiliary'),
+      this.t('שלישונית', 'Tertiary'), this.t('נחותה', 'Inferior'),
+    ];
+    return d.stack.split(' · ').map((code, i) => ({ role: roles[i], code, text: MBTI_FUNCTIONS[code]?.[this.lang.lang()] ?? '' }));
+  }
+  axisBand(i: number): string {
+    const score = this.mbti!.axes[i];
+    const gap = Math.abs(score.pctA - 50) * 2; // 0..100
+    if (gap >= 50) return this.t('העדפה ברורה', 'Clear preference');
+    if (gap >= 20) return this.t('העדפה בינונית', 'Moderate preference');
+    return this.t('העדפה קלה, קרוב לאמצע', 'Slight preference, close to the middle');
+  }
+
+  bfBandKey(score: number): 'low' | 'mid' | 'high' { return bfBand(score); }
+  bfFacets(key: 'O' | 'C' | 'E' | 'A' | 'N'): string { return BF_DETAILS[key].facets[this.lang.lang()].join(' · '); }
+  bfText(key: 'O' | 'C' | 'E' | 'A' | 'N', part: 'life' | 'work' | 'love'): string {
+    return BF_DETAILS[key].bands[bfBand(this.big![key])][part][this.lang.lang()];
+  }
+  bfTips(key: 'O' | 'C' | 'E' | 'A' | 'N'): string[] { return BF_DETAILS[key].tips[bfBand(this.big![key])][this.lang.lang()]; }
+  bfSummary(): string {
+    if (!this.big) return '';
+    const sorted = [...this.traits].sort((x, y) => this.big![y.key] - this.big![x.key]);
+    const hi = sorted[0], lo = sorted[sorted.length - 1];
+    const L = this.lang.lang();
+    return this.t(
+      `התכונה הבולטת ביותר אצלך היא ${hi.name[L]} (${this.big[hi.key]}), והנמוכה ביותר היא ${lo.name[L]} (${this.big[lo.key]}). הפרופיל נקבע מהשילוב בין כל חמש התכונות, ולא מתכונה אחת.`,
+      `Your most prominent trait is ${hi.name[L]} (${this.big[hi.key]}) and your lowest is ${lo.name[L]} (${this.big[lo.key]}). The profile comes from the combination of all five traits, not from one.`,
+    );
+  }
+
   axisRow(i: number): { name: string; pct: number; note: string } {
     const axis = this.axes[i];
     const score = this.mbti!.axes[i];
@@ -373,6 +414,62 @@ export class PsychologyPage implements OnDestroy {
   ennDesire(): string { return this.enn ? ENN_TYPES[this.enn.type].desire[this.lang.lang()] : ''; }
   ennFear(): string { return this.enn ? ENN_TYPES[this.enn.type].fear[this.lang.lang()] : ''; }
   ennMark(): string { return this.enn ? ENN_TYPES[this.enn.type].strength[this.lang.lang()] : ''; }
+
+  private ennD(): EnnDetail | null { return this.enn ? ENN_DETAILS[this.enn.type] : null; }
+  ennOverview(): string { return this.ennD()?.overview[this.lang.lang()] ?? ''; }
+  ennList(key: 'daily' | 'strengths' | 'challenges' | 'tips'): string[] { return this.ennD()?.[key][this.lang.lang()] ?? []; }
+  ennRelationships(): string { return this.ennD()?.relationships[this.lang.lang()] ?? ''; }
+  ennWork(): string { return this.ennD()?.work[this.lang.lang()] ?? ''; }
+  ennGrowthHint(): string { return this.enn ? ENN_TYPES[this.enn.type].growth[this.lang.lang()] : ''; }
+  ennCenterName(): string { return this.enn ? ENN_CENTER[this.enn.type][this.lang.lang()] : ''; }
+  ennCenterText(): string {
+    if (!this.enn) return '';
+    const n = Number(this.enn.type);
+    const key = [8, 9, 1].includes(n) ? 'body' : [2, 3, 4].includes(n) ? 'heart' : 'head';
+    return ENN_CENTER_TEXT[key][this.lang.lang()];
+  }
+  ennPct(type: string): number { return this.enn?.ranked.find((r) => r.type === type)?.pct ?? 0; }
+  ennWing(): { title: string; text: string; pct: number } | null {
+    const d = this.ennD();
+    if (!d || !this.enn) return null;
+    const w = this.enn.wing;
+    return {
+      title: `${this.enn.type}w${w} · ${this.t('כנף', 'wing')} ${w} · ${this.ennName(w)}`,
+      text: d.wings[w]?.[this.lang.lang()] ?? '',
+      pct: this.ennPct(w),
+    };
+  }
+  ennOtherWing(): { title: string; text: string } | null {
+    const d = this.ennD();
+    if (!d || !this.enn) return null;
+    const other = Object.keys(d.wings).find((k) => k !== this.enn!.wing);
+    if (!other) return null;
+    return { title: `${this.enn.type}w${other} · ${this.ennName(other)}`, text: d.wings[other][this.lang.lang()] };
+  }
+  ennArrow(kind: 'stress' | 'growth'): { type: string; name: string; pct: number; text: string } | null {
+    const d = this.ennD();
+    if (!d) return null;
+    const type = d[kind];
+    return { type, name: this.ennName(type), pct: this.ennPct(type), text: (kind === 'stress' ? d.stressText : d.growthText)[this.lang.lang()] };
+  }
+  /** טיפוסים שקרובים לטיפוס הדומיננטי בציון (עד 10 נקודות) */
+  ennCloseCount(): number {
+    if (!this.enn) return 0;
+    const top = this.enn.ranked[0].pct;
+    return this.enn.ranked.slice(1).filter((r) => top - r.pct <= 10).length;
+  }
+  ennSpread(): string {
+    const n = this.ennCloseCount();
+    if (n >= 2) return this.t(
+      'כמה טיפוסים קיבלו ציון קרוב מאוד. זה שכיח, ואומר שכדאי לקרוא את התיאורים של כולם ולבדוק איזה מהם מתאר אותך כשאתה בלחץ ולא רק ביום רגיל.',
+      'Several types scored very close. This is common, and means it is worth reading all their descriptions and checking which one describes you under pressure, not just on an ordinary day.',
+    );
+    if (n === 1) return this.t(
+      'יש טיפוס אחד שמתקרב מאוד לטיפוס הדומיננטי. כדאי לבדוק את שניהם.',
+      'One type comes very close to the dominant one. It is worth checking both.',
+    );
+    return this.t('הטיפוס הדומיננטי בולט בבירור מעל האחרים.', 'The dominant type clearly stands above the others.');
+  }
 
   traitColor(key: string): string { return TRAIT_COLOR[key]; }
   traitText(key: BfScoreKey, score: number): string {
