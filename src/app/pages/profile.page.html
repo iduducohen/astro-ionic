@@ -20,16 +20,23 @@
     </nav>
 
     @if (tab === 'map') {
+      <div class="atlas-stage">
       <header class="s-hero atlas-hero">
         <div class="sky" aria-hidden="true">
           @for (i of stars; track i) {
             <span class="star" [style.--n]="i"></span>
           }
         </div>
+        <div class="atlas-copy">
         <p class="s-kicker">✦ {{ txt(sanctuary.kicker) }}</p>
         <h1>{{ txt(sanctuary.title) }}</h1>
         <p class="s-lead">{{ txt(sanctuary.lead) }}</p>
-        <svg class="wheel" viewBox="0 0 220 220" aria-hidden="true">
+        <p class="s-lead">{{ txt(sanctuary.gets) }}</p>
+        </div>
+      </header>
+        <div class="wheel-side">
+        <div class="wheel-box">
+        <svg class="wheel" viewBox="0 0 220 220" [attr.aria-label]="lang.lang() === 'he' ? 'גלגל המזלות' : 'Zodiac wheel'">
           <circle cx="110" cy="110" r="104" fill="var(--astro-wheel)" stroke="var(--astro-wheel-line)" stroke-width="1" />
           <circle cx="110" cy="110" r="62" fill="none" stroke="var(--astro-wheel-line)" />
           <circle cx="110" cy="110" r="98" fill="none" stroke="var(--astro-wheel-line)" stroke-width=".6" />
@@ -39,21 +46,34 @@
                 <line [attr.x1]="pt(i * 30 - 15, 62).x" [attr.y1]="pt(i * 30 - 15, 62).y" [attr.x2]="pt(i * 30 - 15, 104).x" [attr.y2]="pt(i * 30 - 15, 104).y" stroke="var(--astro-wheel-line)" />
                 <text [attr.x]="pt(i * 30, 83).x" [attr.y]="pt(i * 30, 83).y" text-anchor="middle" dominant-baseline="central"
                   [attr.transform]="'rotate(' + (i * 30) + ' ' + pt(i * 30, 83).x + ' ' + pt(i * 30, 83).y + ')'"
-                  [class.on]="i === signIndex()">{{ s.symbol }}</text>
+                  [class.on]="i === signIndex()" [class.hot]="hover?.id === s.id">{{ s.symbol }}</text>
+                <path class="sign-hit" [class.hot]="hover?.id === s.id" [attr.d]="sector(i)"
+                  (pointerenter)="showSign(s, $event)" (pointerleave)="hideSign($event)" (pointerup)="tapSign(s, $event)" />
               </g>
             }
           </g>
           <path d="M110 3 l-5 0 l5 9 l5 -9 z" fill="var(--astro-moon)" />
-          <text x="110" y="110" text-anchor="middle" dominant-baseline="central"
-            [attr.style]="'font: 500 26px var(--display-font); fill: ' + (signIndex() === null ? 'var(--astro-moon)' : 'var(--ion-text-color)')">
-            {{ signIndex() === null ? '✦' : signs[signIndex()!].symbol }}
-          </text>
+          @if (!hover) {
+            <text x="110" y="110" text-anchor="middle" dominant-baseline="central"
+              [attr.style]="'font: 500 26px var(--display-font); fill: ' + (signIndex() === null ? 'var(--astro-moon)' : 'var(--ion-text-color)')">
+              {{ signIndex() === null ? '✦' : signs[signIndex()!].symbol }}
+            </text>
+          }
         </svg>
-        <div class="s-jump">
-          <button type="button" (click)="go('atlas-form')">{{ lang.lang() === 'he' ? 'לבניית המפה' : 'Build the chart' }}</button>
-          <button type="button" class="ghost" (click)="setTab('gifts')">{{ lang.lang() === 'he' ? 'מה מקבלים' : 'What you get' }}</button>
+        @if (hover) {
+          <div class="sign-card" role="tooltip">
+            <b>{{ hover.name[lang.lang()] }} {{ hover.symbol }}</b>
+            <small>{{ ELEMENTS[hover.element][lang.lang()] }} · {{ hover.ruler[lang.lang()] }}</small>
+            <small>{{ signDates(hover) }}</small>
+            <p>{{ signLine(hover) }}</p>
+          </div>
+        }
+        <span class="tip-wrap wheel-tip">
+          <button type="button" class="qmark" (click)="wheelTip = !wheelTip" [attr.aria-expanded]="wheelTip" [attr.aria-label]="lang.lang() === 'he' ? 'מה מראה גלגל המזלות' : 'What the zodiac wheel shows'">?</button>
+          <span class="tip wheel-help" role="tooltip" [class.show]="wheelTip">{{ lang.lang() === 'he' ? 'שנים־עשר המזלות במעגל. המשולש למעלה הוא הסימון. אחרי תאריך לידה הגלגל מסתובב, ומזל השמש עולה אל הסימון. הסמל במרכז הוא מזל השמש: איך אתה פועל עם אנשים. זה לא הירח, ולא המזל העולה. ריחוף על מזל מראה את שמו ומשפט עליו.' : 'The twelve signs in a circle. The triangle at the top is the marker. After a birth date the wheel turns, and the Sun sign rises to the marker. The symbol in the center is the Sun sign: how you act with people. It is not the Moon, and not the rising sign. Hover a sign to see its name and a short line.' }}</span>
+        </span>
         </div>
-      </header>
+        </div>
 
       <form id="atlas-form" (submit)="submit($event)" class="form-card chart-form s-form">
         <p class="s-kicker">☉ {{ lang.lang() === 'he' ? 'פרטי הלידה' : 'Birth details' }}</p>
@@ -71,7 +91,49 @@
           <ion-checkbox [checked]="sunset" (ionChange)="onSunset($event)" labelPlacement="end" justify="start">{{ lang.text().afterSunset }}</ion-checkbox>
           <ion-note style="display:block;margin:6px 0 0;font-size:13px;line-height:1.45">{{ lang.text().afterSunsetHelp }}</ion-note>
         </div>
-        <p class="muted" style="margin:0;font-size:13.5px;line-height:1.5">{{ lang.lang() === 'he' ? 'שעה ומקום אינם חובה. איתם מתקבלים גם הירח והמזל העולה, לא רק מזל השמש.' : 'Time and place are optional. With them you also get the Moon and the rising sign, not only the Sun sign.' }}</p>
+        <div class="why-place">
+          <p>{{ lang.lang() === 'he' ? 'השם והתאריך מספיקים למזל השמש, ללוח העברי, לשנה הסינית, למספרים, לעץ ולקלף. השעה והעיר נחוצות רק לשני דברים נוספים: עיר נותנת את הירח, איך אתה מרגיש כשאתה לבד. שעה ועיר יחד נותנות את המזל העולה, איך זרים רואים אותך בפעם הראשונה.' : 'The name and the date are enough for the Sun sign, the Hebrew calendar, the Chinese year, the numbers, the tree and the card. The time and the city are needed only for two more things: a city gives the Moon, how you feel when you are alone. A time and a city together give the rising sign, how strangers see you the first time.' }}</p>
+          <details class="birth-record">
+            <summary>{{ lang.lang() === 'he' ? 'אין לי את השעה או את העיר. איפה הן רשומות?' : 'I do not have the time or the city. Where are they written?' }}</summary>
+            <div class="birth-record-body">
+              @if (lang.lang() === 'he') {
+                <p>בלי השעה והעיר המפה עדיין נפתחת. חסרים בה רק הירח והמזל העולה. את התאריך ואת מקום הלידה מוצאים בתעודה. את השעה, אם היא רשומה, מוצאים בסיכום הלידה מבית החולים.</p>
+                <p><b>נולדת בישראל.</b> רשות האוכלוסין מנפיקה בחינם תעודת לידה ותמצית רישום. בהן התאריך והמקום, לא השעה.</p>
+                <ul>
+                  <li>עבורך, או עבור ילד שעוד לא בן 18: מספר זהות, באזור האישי.</li>
+                  <li>בלשכה: תעודת זהות. עבור בן משפחה מעל גיל 18 גם ייפוי כוח.</li>
+                  <li>עבור אדם אחר: ייפוי כוח מעורך דין, או פסק דין.</li>
+                </ul>
+                <p><b>נולדת בחו״ל.</b> התעודה יוצאת במדינה שבה נולדת. את השעה מחפשים בה, או בסיכום הלידה משם. רישום במרשם הישראלי הוא בקשה נפרדת, בלשכה או בנציגות.</p>
+                <ul>
+                  <li>תעודת לידה מקורית. במדינה שחתומה על אמנת האפוסטיל, עם חותמת אפוסטיל. במדינה אחרת, אימות בנציגות.</li>
+                  <li>תרגום נוטריוני לעברית, אם התעודה לא בעברית, באנגלית או בערבית.</li>
+                  <li>תעודת זהות או דרכון של ההורה שמגיש, ודרכון זר של הנולד אם יש.</li>
+                  <li>אישור מבית החולים שהאם שרשומה בתעודה היא היולדת, למשל מכתב שחרור.</li>
+                </ul>
+              } @else {
+                <p>Without the time and the city the chart still opens. Only the Moon and the rising sign are missing. The date and the place of birth are on a certificate. The hour, if it was written down, is on the hospital birth summary.</p>
+                <p><b>Born in Israel.</b> The Population and Immigration Authority issues a birth certificate and a registry extract for free. They list the date and the place, not the hour.</p>
+                <ul>
+                  <li>For yourself, or for a child under 18: an ID number, in the personal area online.</li>
+                  <li>At an office: an identity card. For a relative over 18, also a power of attorney.</li>
+                  <li>For anyone else: a lawyer’s power of attorney, or a court order.</li>
+                </ul>
+                <p><b>Born abroad.</b> The certificate comes from the country of birth. The hour is on that certificate, or on the hospital summary from there. Registering the birth in Israel is a separate request, at an office or at a mission.</p>
+                <ul>
+                  <li>The original birth certificate. In a Hague Apostille country, with an apostille. Elsewhere, authentication at the mission.</li>
+                  <li>A notarial Hebrew translation, if the certificate is not in Hebrew, English or Arabic.</li>
+                  <li>The applying parent’s identity card or passport, and the child’s foreign passport if there is one.</li>
+                  <li>A hospital paper showing that the mother named on the certificate is the birth mother, such as a discharge letter.</li>
+                </ul>
+              }
+              <p class="birth-record-links">
+                <a href="https://www.gov.il/he/service/birth_certificate" target="_blank" rel="noopener noreferrer">{{ lang.lang() === 'he' ? 'תעודת לידה, נולדים בישראל' : 'Birth certificate, born in Israel' }}</a>
+                <a href="https://www.gov.il/he/service/registration_of_a_child_who_was_born_abroad" target="_blank" rel="noopener noreferrer">{{ lang.lang() === 'he' ? 'רישום לידה בחו״ל' : 'Register a birth abroad' }}</a>
+              </p>
+            </div>
+          </details>
+        </div>
         <div class="pair">
           <label class="native-field"><span>{{ lang.text().country }}</span>
             <select [value]="cc" (change)="onCountry($event)">
@@ -95,10 +157,16 @@
       @if (profile(); as p) {
         <div aria-live="polite" class="result">
           <article class="form-card chart-lead">
-            <button type="button" class="share-btn" (click)="openShare()">
-              <ion-icon name="share-outline" aria-hidden="true"></ion-icon>
-              {{ lang.lang() === 'he' ? 'שיתוף' : 'Share' }}
-            </button>
+            <div class="lead-tools">
+              <button type="button" class="share-btn" (click)="openShare()">
+                <ion-icon name="share-outline" aria-hidden="true"></ion-icon>
+                {{ lang.lang() === 'he' ? 'שיתוף' : 'Share' }}
+              </button>
+              <span class="tip-wrap">
+                <button type="button" class="qmark" (click)="shareTip = !shareTip" [attr.aria-expanded]="shareTip" [attr.aria-label]="lang.lang() === 'he' ? 'הסיכום המלא של המפה' : 'The full chart summary'">?</button>
+                <span class="tip share-body-tip" role="tooltip" [class.show]="shareTip">{{ shareBody(p) }}</span>
+              </span>
+            </div>
             <p class="s-kicker">✦ {{ lang.lang() === 'he' ? 'הדיוקן פתוח במלואו' : 'The portrait is fully open' }}</p>
             <p class="muted" style="margin:0;font-size:14px">{{ lang.text().ageLine(p.name, p.age) }}</p>
             <h2 class="headline">{{ lang.text().signTitle(p.western.name[lang.lang()]) }}<span class="sym">{{ p.western.symbol }}</span></h2>
@@ -107,14 +175,34 @@
             <ul class="chips">
               @for (t of p.western.traits; track t.en) { <li>{{ t[lang.lang()] }}</li> }
             </ul>
-            <p class="lead-read">{{ plainSun(p) }}</p>
-            <p class="lead-read">{{ plainSlice(p) }}</p>
-            <a class="full-link" routerLink="/charts/natal" [queryParams]="lang.lang() === 'en' ? { lang: 'en' } : null">{{ lang.lang() === 'he' ? 'רוצים גם את כל הכוכבים והבתים? זו המפה המלאה, וגם היא בחינם' : 'Want every planet and house too? That is the full chart, and it is free too' }}</a>
+            <ul class="lead-points">
+              @for (line of portraitPoints(p); track $index) { <li>{{ line }}</li> }
+            </ul>
           </article>
 
           @if (sky.length) {
-            <h2 class="section-label">{{ lang.lang() === 'he' ? 'הירח, ואם יש שעה — גם האופק' : 'The Moon, and the rising sign if there is a time' }}</h2>
-            <p class="sky-lead">{{ lang.lang() === 'he' ? 'מזל השמש למעלה אומר איך אתה פועל עם אנשים. כאן כתוב מה אתה צריך כשאתה לבד, ואיך מי שלא מכיר אותך קורא אותך בדקה הראשונה.' : 'The Sun sign above says how you act with people. Here is what you need when you are alone, and how someone who does not know you reads you in the first minute.' }}</p>
+            <h2 class="section-label">{{ lang.lang() === 'he' ? (sky.length > 1 ? 'הירח והמזל העולה' : 'הירח') : (sky.length > 1 ? 'The Moon and the rising sign' : 'The Moon') }}</h2>
+            <ul class="lead-points">
+              @if (lang.lang() === 'he') {
+                <li>למעלה מופיע מזל השמש. הוא אומר איך אתה פועל עם אנשים.</li>
+                <li>הירח הוא מזל אחר. הוא אומר איך אתה מרגיש כשאתה לבד.</li>
+                @if (sky.length > 1) {
+                  <li>המזל העולה הוא מזל שלישי. הוא אומר איך זרים רואים אותך בדקה הראשונה.</li>
+                  <li>המזל העולה נקבע לפי העיר ושעת הלידה.</li>
+                } @else {
+                  <li>בלי שעת לידה אין מזל עולה. הירח כאן משוער לצהריים.</li>
+                }
+              } @else {
+                <li>The sign above is the Sun sign. It says how you act with people.</li>
+                <li>The Moon is a different sign. It says how you feel when you are alone.</li>
+                @if (sky.length > 1) {
+                  <li>The rising sign is a third sign. It says how strangers see you in the first minute.</li>
+                  <li>The rising sign comes from the city and the birth time.</li>
+                } @else {
+                  <li>Without a birth time there is no rising sign. The Moon here is estimated for noon.</li>
+                }
+              }
+            </ul>
             <div class="systems">
               @for (card of sky; track card.title) {
                 <article class="sys">
@@ -145,24 +233,28 @@
             <article class="sys">
               <h3><ion-icon name="calculator-outline" aria-hidden="true"></ion-icon> {{ lang.text().lifePath }}</h3>
               <p class="val">{{ p.lifePath }} — {{ life(p).title[lang.lang()] }}</p>
+              <p class="sub">{{ lang.lang() === 'he' ? 'מספר אחד מסכום הספרות של תאריך הלידה.' : 'One number from the digits of the birth date.' }}</p>
               <p>{{ life(p).text[lang.lang()] }}</p>
               <p class="gives">{{ lifeGives(p) }}</p>
             </article>
             <article class="sys">
               <h3><ion-icon name="text-outline" aria-hidden="true"></ion-icon> {{ lang.text().nameNumber }}</h3>
               <p class="val">{{ p.nameNum.number }} — {{ nameNum(p).title[lang.lang()] }}</p>
+              <p class="sub">{{ lang.lang() === 'he' ? 'מספר אחד מאותיות השם שכתבת.' : 'One number from the letters of the name you typed.' }}</p>
               <p>{{ nameBody(p) }}</p>
               <p class="gives">{{ nameGives(p) }}</p>
             </article>
             <article class="sys">
               <h3><ion-icon name="leaf-outline" aria-hidden="true"></ion-icon> {{ lang.text().celtic }}</h3>
               <p class="val">{{ p.celtic.name[lang.lang()] }}</p>
+              <p class="sub">{{ lang.lang() === 'he' ? 'עץ לפי היום והחודש בלוח הקלטי.' : 'A tree from the day and month on the Celtic calendar.' }}</p>
               <p>{{ p.celtic.text[lang.lang()] }}</p>
               <p class="gives">{{ celticGives() }}</p>
             </article>
             <article class="sys">
               <h3><ion-icon name="sparkles-outline" aria-hidden="true"></ion-icon> {{ lang.text().birthCard }}</h3>
               <p class="val">{{ p.tarot.roman }} — {{ p.tarot.name[lang.lang()] }}</p>
+              <p class="sub">{{ lang.text().birthCardSub }}</p>
               <p>{{ p.tarot.upright[lang.lang()] }}</p>
               <p class="gives">{{ tarotGives() }}</p>
             </article>
@@ -177,7 +269,7 @@
 
           <section class="la">
             <h2 class="section-label">{{ lang.lang() === 'he' ? 'איפה זה פוגש את החיים — ' + p.western.name.he : 'Where this meets life — ' + p.western.name.en }}</h2>
-            <p class="sky-lead">{{ lang.lang() === 'he' ? 'השורה הראשונה בכל תחום היא לפי מזל השמש: הסגנון היומי. בקריירה ובאהבה יש גם שורה לפי מספר החיים: לאן זה הולך לאורך שנים. אם הן לא אותו דבר, שתיהן נכונות.' : 'The first line in each area is the Sun sign: the daily style. Career and love also have a line from the life-path number: where it goes over years. If they differ, both are true.' }}</p>
+            <p class="sky-lead">{{ lang.lang() === 'he' ? 'השורה הראשונה בכל תחום היא לפי מזל השמש, והיא מתארת את הסגנון היומי. בקריירה ובאהבה יש גם שורה לפי מספר דרך החיים, והיא מתארת את הכיוון לאורך שנים. אם שתי השורות לא אומרות אותו דבר, שתיהן נכונות.' : 'The first line in each area comes from the Sun sign, and it describes the daily style. Career and love also have a line from the life path number, and it describes the direction over years. If the two lines do not say the same thing, both are true.' }}</p>
             <div class="la-grid">
               <article class="la-item"><h3>{{ lang.lang() === 'he' ? 'קריירה' : 'Career' }}</h3><p class="la-why">{{ areaWhy('career') }}</p><p>{{ areas(p).areas.career[lang.lang()] }}</p><p class="la-extra">{{ lifePathCareer(p) }}</p></article>
               <article class="la-item"><h3>{{ lang.lang() === 'he' ? 'כסף' : 'Money' }}</h3><p class="la-why">{{ areaWhy('money') }}</p><p>{{ areas(p).areas.money[lang.lang()] }}</p></article>
@@ -187,74 +279,110 @@
               <article class="la-item"><h3>{{ lang.lang() === 'he' ? 'אתגרים' : 'Challenges' }}</h3><p class="la-why">{{ areaWhy('challenges') }}</p><p>{{ areas(p).areas.challenges[lang.lang()] }}</p></article>
             </div>
           </section>
+          <section class="weave">
+            <p class="s-kicker">✦ {{ lang.lang() === 'he' ? 'שכבת AI' : 'AI layer' }}</p>
+            <h2>{{ lang.lang() === 'he' ? 'ניתוח מעמיק' : 'A deeper reading' }}</h2>
+            @if (!weaveSections.length && !weaveBusy) {
+              <p>{{ lang.lang() === 'he' ? 'השכבה קוראת את מה שכבר כתוב במפה, ומשלבת את זה לניתוח על זוגיות, פרנסה, בריאות, חוזקות ואתגרים.' : 'The layer reads what is already written on the chart, and combines it into a reading of relationship, livelihood, health, strengths and challenges.' }}</p>
+            }
+            @if (weaveBusy) {
+              <div class="think" role="status" aria-live="polite">
+                <span class="think-orbit" aria-hidden="true"></span>
+                <span class="think-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <p>{{ thinkLine() }}</p>
+              </div>
+            }
+            @if (weaveSections.length && !weaveBusy) {
+              <div class="weave-sections">
+                @for (section of weaveSections; track section.title) {
+                  <article>
+                    <h3>{{ section.title }}</h3>
+                    <ul class="lead-points">
+                      @for (line of section.lines; track $index) { <li>{{ line }}</li> }
+                    </ul>
+                  </article>
+                }
+              </div>
+            }
+            @if (weaveError && !weaveBusy) { <p class="err" role="alert">{{ weaveError }}</p> }
+            @if (weaveBusy || !weaveSections.length) {
+              <button type="button" class="weave-go" (click)="weave(p)" [disabled]="weaveBusy">
+                {{ weaveBusy ? (lang.lang() === 'he' ? 'חושב…' : 'Thinking…') : (lang.lang() === 'he' ? 'הוסף שכבת AI לניתוח מעמיק' : 'Add an AI layer for a deeper reading') }}
+              </button>
+            }
+          </section>
           <button type="button" class="share-btn share-btn-block" (click)="openShare()">
             <ion-icon name="share-outline" aria-hidden="true"></ion-icon>
             {{ lang.lang() === 'he' ? 'שיתוף' : 'Share' }}
           </button>
 
           <dialog class="map-dialog share-dialog" #shareDlg (click)="shareBackdrop($event)">
-            <div class="map-dialog-bar">
-              <h2>{{ lang.lang() === 'he' ? 'שיתוף המפה' : 'Share this chart' }}</h2>
+            <div class="share-head">
+              <div>
+                <p class="s-kicker">✦ {{ lang.lang() === 'he' ? 'לשלוח את הדיוקן' : 'Send the portrait' }}</p>
+                <h2>{{ lang.lang() === 'he' ? 'שיתוף המפה' : 'Share this chart' }}</h2>
+                <p class="share-who">{{ p.western.symbol }} {{ p.name }} · {{ p.western.name[lang.lang()] }}</p>
+              </div>
               <button type="button" class="map-close" (click)="closeShare()" [attr.aria-label]="lang.lang() === 'he' ? 'סגירה' : 'Close'">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
               </button>
             </div>
-            <div class="share-list">
+            <div class="share-grid">
               @for (item of shareLinks(p); track item.id) {
-                <a class="share-row" [href]="item.href" target="_blank" rel="noopener noreferrer">
-                  <span class="share-mark" [style.background]="item.color" [innerHTML]="item.icon"></span>
-                  <span class="share-name">{{ item.label }}</span>
-                </a>
+                @if (item.id === 'ig') {
+                  <button type="button" class="share-tile" (click)="shareInstagram(p)">
+                    <span class="share-mark ig" [innerHTML]="item.icon"></span>
+                    <span class="share-name">{{ item.label }}</span>
+                  </button>
+                } @else {
+                  <a class="share-tile" [href]="item.href" target="_blank" rel="noopener noreferrer">
+                    <span class="share-mark" [style.background]="item.color" [innerHTML]="item.icon"></span>
+                    <span class="share-name">{{ item.label }}</span>
+                  </a>
+                }
               }
-              <button type="button" class="share-row" (click)="copyShare(p)">
-                <span class="share-mark copy" aria-hidden="true">
-                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M8 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2V9a2 2 0 0 0-2-2H8zm-2 4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2H6z"/></svg>
-                </span>
-                <span class="share-name">{{ copied ? (lang.lang() === 'he' ? 'הטקסט הועתק' : 'Text copied') : (lang.lang() === 'he' ? 'העתקת הטקסט' : 'Copy text') }}</span>
+            </div>
+            @if (igNote) {
+              <p class="share-note">{{ igNote }}</p>
+            }
+            <div class="share-tools" [class.one]="!canNative">
+              <button type="button" class="share-tool" (click)="copyShare(p)">
+                {{ copied ? (lang.lang() === 'he' ? 'הטקסט הועתק' : 'Text copied') : (lang.lang() === 'he' ? 'העתקת הטקסט' : 'Copy text') }}
               </button>
               @if (canNative) {
-                <button type="button" class="share-row" (click)="nativeShare(p)">
-                  <span class="share-mark more" aria-hidden="true">
-                    <svg viewBox="0 0 24 24"><path fill="currentColor" d="M13 5.5V16l4.2-4.2 1.4 1.4L12 19.9 5.4 13.2l1.4-1.4L11 16V5.5h2zM5 21h14v-2H5v2z"/></svg>
-                  </span>
-                  <span class="share-name">{{ lang.lang() === 'he' ? 'עוד אפליקציות' : 'More apps' }}</span>
+                <button type="button" class="share-tool" (click)="nativeShare(p)">
+                  {{ lang.lang() === 'he' ? 'עוד אפליקציות' : 'More apps' }}
                 </button>
               }
             </div>
           </dialog>
         </div>
       }
+      </div>
     }
 
     @if (tab === 'gifts') {
       <section class="s-block">
-        <p class="s-kicker">✦ {{ lang.lang() === 'he' ? 'הכול בחינם' : 'All of it free' }}</p>
-        <h2>{{ lang.lang() === 'he' ? 'מה נפתח במפה' : 'What the chart opens' }}</h2>
-        <p>{{ txt(sanctuary.freeLine) }}</p>
-        <div class="atlas-perks">
-          @for (perk of sanctuary.perks; track perk.title.en) {
-            <article>
-              <span>{{ perk.mark }}</span>
-              <b>{{ txt(perk.title) }}</b>
-              <small>{{ txt(perk.text) }}</small>
-            </article>
-          }
-        </div>
-        <ol class="atlas-gifts">
-          @for (gift of sanctuary.gifts; track gift.n) {
-            <li>
-              <span class="atlas-n">{{ gift.n }}</span>
-              <div>
-                <h3>{{ txt(gift.title) }}</h3>
-                <p>{{ txt(gift.text) }}</p>
-                <p class="atlas-note">{{ txt(gift.note) }}</p>
-              </div>
-            </li>
-          }
-        </ol>
+        <p class="s-kicker">✦ {{ lang.lang() === 'he' ? 'הכרטיסים בתוצאה' : 'The cards in the result' }}</p>
+        <h2>{{ lang.lang() === 'he' ? 'מה מקבלים' : 'What you get' }}</h2>
+        <p>{{ txt(sanctuary.intro) }}</p>
+        @for (group of sanctuary.groups; track group.title.en) {
+          <article class="atlas-group">
+            <h3>{{ txt(group.title) }}</h3>
+            <p>{{ txt(group.lead) }}</p>
+            <ul class="atlas-gets">
+              @for (item of group.items; track item.title.en) {
+                <li>
+                  <b>{{ txt(item.title) }}</b>
+                  <span>{{ txt(item.text) }}</span>
+                </li>
+              }
+            </ul>
+          </article>
+        }
+        <p class="atlas-close">{{ txt(sanctuary.closing) }}</p>
         <div class="s-jump">
           <button type="button" (click)="setTab('map')">{{ lang.lang() === 'he' ? 'לבניית המפה' : 'Build the chart' }}</button>
-          <a class="ghost" routerLink="/charts/natal" [queryParams]="lang.lang() === 'en' ? { lang: 'en' } : null">{{ lang.lang() === 'he' ? 'למפה המלאה' : 'The full chart' }}</a>
         </div>
       </section>
     }

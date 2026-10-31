@@ -72,3 +72,8 @@ Thumbs.db
 # Cypress
 /cypress/videos
 /cypress/screenshots
+
+# מפתח של קלוד, נשאר במחשב
+.env
+.env.*
+!.env.example

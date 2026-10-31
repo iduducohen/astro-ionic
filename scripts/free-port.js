@@ -8,7 +8,7 @@ if (!/^\d+$/.test(port || '')) {
 
 function listeningPids(target) {
   if (process.platform === 'win32') {
-    const out = execSync('netstat -ano -p tcp', { encoding: 'utf8' });
+    const out = execSync('netstat -ano', { encoding: 'utf8' });
     const ids = new Set();
     for (const line of out.split(/\r?\n/)) {
       const parts = line.trim().split(/\s+/);
