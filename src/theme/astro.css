@@ -5307,7 +5307,7 @@ app-screen ion-checkbox { --border-color: rgba(228, 195, 106, 0.55); color: #f4e
 }
 .weave h2 { margin: 0; font-size: clamp(1.35rem, 3vw, 1.7rem); }
 .weave > p { margin: 10px 0 0; color: #d9d0e4; line-height: 1.6; }
-.weave-sections { display: grid; gap: 10px; margin-top: 14px; }
+.weave-sections { display: grid; gap: 10px; margin-top: 14px; grid-template-columns: 1fr; }
 .weave-sections article {
   padding: 12px 14px; border-radius: 14px;
   background: rgba(7, 11, 22, 0.55); border: 1px solid rgba(228, 195, 106, 0.22);
@@ -5316,10 +5316,6 @@ app-screen ion-checkbox { --border-color: rgba(228, 195, 106, 0.55); color: #f4e
   margin: 0 0 8px; color: #e4c36a; font-family: var(--display-font); font-size: 1.05rem; font-weight: 700;
 }
 .weave-sections .lead-points { margin: 0; }
-@media (min-width: 720px) {
-  .weave-sections { grid-template-columns: 1fr 1fr; }
-  .weave-sections article:last-child:nth-child(odd) { grid-column: 1 / -1; }
-}
 .think { margin-top: 16px; display: grid; justify-items: center; gap: 10px; }
 .think-orbit {
   width: 54px; height: 54px; border-radius: 50%;

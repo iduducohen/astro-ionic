@@ -85,6 +85,15 @@ function factsOf(body) {
   const rising = skyPoint(body.rising, true);
   const written = writtenOf(body.written);
   if (!written) return null;
+  const decan = clip(body.decan, 240);
+  const modality = clip(body.modality, 40);
+  const traits = clip(body.traits, 120);
+  if (!decan || !modality || !traits) return null;
+  facts.decan = decan;
+  facts.modality = modality;
+  facts.traits = traits;
+  facts.bodies = textList(body.bodies, 10, 100);
+  facts.aspects = textList(body.aspects, 6, 140);
   if (moon) facts.moon = moon;
   if (rising) facts.rising = rising;
   facts.written = written;
@@ -92,6 +101,11 @@ function factsOf(body) {
 }
 
 const WRITTEN_KEYS = ['sun', 'hebrew', 'chinese', 'lifePath', 'nameNumber', 'celtic', 'tarot', 'stone', 'career', 'money', 'love', 'health', 'strengths', 'challenges'];
+
+function textList(value, max, length) {
+  if (!Array.isArray(value)) return [];
+  return value.map((item) => clip(item, length)).filter(Boolean).slice(0, max);
+}
 
 function writtenOf(value) {
   if (!value || typeof value !== 'object') return null;
@@ -143,6 +157,19 @@ function brief(facts) {
   } else {
     lines.push(he ? 'אין מזל עולה, כי אין שעת לידה ידועה.' : 'No rising sign, because the birth time is unknown.');
   }
+  if (facts.bodies?.length) {
+    lines.push(he ? 'מיקומים שחושבו:' : 'Calculated positions:');
+    for (const line of facts.bodies) lines.push(line);
+  } else {
+    lines.push(he ? 'אין מיקומי כוכבים, כי לא נבחרה עיר.' : 'No planet positions, because no city was chosen.');
+  }
+  if (facts.aspects?.length) {
+    lines.push(he ? 'היבטים שחושבו:' : 'Calculated aspects:');
+    for (const line of facts.aspects) lines.push(line);
+  }
+  lines.push(he ? `חלק במזל: ${facts.decan}` : `Decan: ${facts.decan}`);
+  lines.push(he ? `איכות: ${facts.modality}` : `Modality: ${facts.modality}`);
+  lines.push(he ? `תכונות המזל: ${facts.traits}` : `Sign traits: ${facts.traits}`);
   lines.push(he ? 'הטקסט שכבר כתוב במפה:' : 'The text already written on the chart:');
   const labels = he
     ? { sun: 'מזל השמש', hebrew: 'מזל עברי', chinese: 'שנה סינית', lifePath: 'דרך החיים', nameNumber: 'מספר השם', celtic: 'עץ', tarot: 'קלף', stone: 'אבן', career: 'קריירה', money: 'כסף', love: 'אהבה', health: 'בריאות', strengths: 'חוזקות', challenges: 'אתגרים', moon: 'ירח', rising: 'מזל עולה' }
@@ -155,40 +182,42 @@ function brief(facts) {
 
 function systemPrompt(lang) {
   if (lang === 'he') {
-    return `אתה כותב ניתוח מעמיק בעברית, בשפה חמה ובהירה.
-קיבלת עובדות שכבר חושבו, וגם את הטקסט שכבר כתוב במפה.
-הניתוח משלב את שניהם: מה שכתוב, ומה שאתה מבין כשקוראים את הכל יחד.
-אל תעתיק משפט שכבר כתוב. כל שורה אומרת את החיבור, לא את המשפט המקורי.
-אל תוסיף כוכב, בית או זווית שלא מופיעים בעובדות.
+    return `אתה כותב תמונת אישיות בעברית, בשפה חמה ומדויקת.
+התמונה נבנית ממיקומי הכוכבים ומההיבטים שחושבו. הטקסט שכבר כתוב במפה הוא רקע: אסור לסכם אותו ואסור לחזור על עצה שכבר מופיעה בו.
+כל משפט מזכיר נקודה שחושבה: מזל, מספר, מעלה, בית או היבט.
+תאר מנגנון: בגלל שכוכב אחד במזל אחד והשני במזל אחר, באותו רגע קורה דבר מסוים.
+אל תכתוב עצה כללית שיכולה להתאים לכל אדם.
+אל תוסיף כוכב, בית או היבט שלא מופיעים בעובדות.
 אל תחזה אירוע, תאריך, או אם משהו יצליח.
 אל תכתוב שזו מדידה מדעית.
-כתוב תמיד בלשון זכר, כמו שאר המפה: אתה, שלך, נמשך.
-החזר JSON בלבד, בלי הסבר מסביב:
-{"sections":[{"title":"זוגיות","lines":["משפט.","משפט.","משפט."]},{"title":"פרנסה","lines":["משפט.","משפט.","משפט."]},{"title":"בריאות","lines":["משפט.","משפט.","משפט."]},{"title":"חוזקות","lines":["משפט.","משפט.","משפט."]},{"title":"אתגרים","lines":["משפט.","משפט.","משפט."]}]}
-בדיוק חמישה מקטעים, בסדר הזה, עם הכותרות האלה.
-בכל מקטע שלוש שורות. כל שורה משפט אחד, עד 18 מילים.
-זוגיות: חבר את מה שכתוב על אהבה, על הירח אם יש, ועל מספר השם.
-פרנסה: חבר עבודה וכסף, את מזל השמש ואת דרך החיים.
-בריאות: חבר את מה שכתוב על הגוף עם מה שמכביד רגשית, בלי אבחון.
-חוזקות: מה כבר עובד אצלו, מתוך כמה טקסטים יחד.
-אתגרים: איפה הטקסטים מתנגשים, ומה עוזר.`;
+כתוב תמיד בלשון זכר: אתה, שלך, נמשך.
+אם אין מיקומי כוכבים, כתוב רק ממה שיש, וציין שאין ירח ומזל עולה.
+החזר JSON בלבד:
+{"sections":[{"title":"איך אתה פועל","lines":["משפט.","משפט."]},{"title":"איך אתה מתקרב","lines":["משפט.","משפט."]},{"title":"איפה זה נתקע","lines":["משפט.","משפט."]},{"title":"מה מניע אותך","lines":["משפט.","משפט."]}]}
+בדיוק ארבעה מקטעים, בסדר הזה, עם הכותרות האלה.
+בכל מקטע שני משפטים. כל משפט עד 40 מילים.
+איך אתה פועל: השמש, כוכב חמה אם יש, ודרך החיים. איך החלטה יוצאת ממך.
+איך אתה מתקרב: הירח, נוגה אם יש, ומספר השם. מה אתה צריך כדי להישאר.
+איפה זה נתקע: ההיבט ההדוק ביותר, או הפער בין השמש לירח אם אין היבט. רגע אחד שחוזר.
+מה מניע אותך: מאדים אם יש, המזל העולה אם יש, ודרך החיים. הדחף, לא רשימת מקצועות.`;
   }
-  return `You write a deeper reading in English, in warm and plain language.
-You receive facts already calculated, and the text already written on the chart.
-The reading combines both: what is written, and what you understand when all of it is read together.
-Do not copy a sentence that is already written. Each line says the connection, not the original sentence.
+  return `You write a personality picture in English, in warm and precise language.
+The picture is built from the calculated positions and aspects. The text already written on the chart is background: do not summarize it, and do not repeat advice already written there.
+Every sentence names a calculated point: a sign, a number, a degree, a house, or an aspect.
+Describe a mechanism: because one planet is in one sign and another is in another, a specific thing happens in the same moment.
+Do not write general advice that could fit any person.
 Do not add a planet, a house, or an aspect that is not in the facts.
 Do not predict an event, a date, or whether something will succeed.
 Do not call this a scientific measurement.
-Return JSON only, with no surrounding explanation:
-{"sections":[{"title":"Relationship","lines":["One sentence.","One sentence.","One sentence."]},{"title":"Livelihood","lines":["One sentence.","One sentence.","One sentence."]},{"title":"Health","lines":["One sentence.","One sentence.","One sentence."]},{"title":"Strengths","lines":["One sentence.","One sentence.","One sentence."]},{"title":"Challenges","lines":["One sentence.","One sentence.","One sentence."]}]}
-Exactly five sections, in this order, with these titles.
-Each section has three lines. Each line is one sentence, up to 18 words.
-Relationship: connect what is written about love, the Moon if present, and the name number.
-Livelihood: connect work and money, the Sun sign and the life path.
-Health: connect what is written about the body with what weighs emotionally, with no diagnosis.
-Strengths: what already works, drawn from several texts together.
-Challenges: where the texts pull apart, and what helps.`;
+If there are no planet positions, write only from what is present, and say that the Moon and the rising sign are missing.
+Return JSON only:
+{"sections":[{"title":"How you act","lines":["One sentence.","One sentence."]},{"title":"How you come close","lines":["One sentence.","One sentence."]},{"title":"Where it sticks","lines":["One sentence.","One sentence."]},{"title":"What drives you","lines":["One sentence.","One sentence."]}]}
+Exactly four sections, in this order, with these titles.
+Each section has two sentences. Each sentence is up to 40 words.
+How you act: the Sun, Mercury if present, and the life path. How a decision leaves you.
+How you come close: the Moon, Venus if present, and the name number. What you need in order to stay.
+Where it sticks: the tightest aspect, or the gap between the Sun and the Moon if there is no aspect. One moment that repeats.
+What drives you: Mars if present, the rising sign if present, and the life path. The drive, not a list of jobs.`;
 }
 
 function sectionsOf(text) {
@@ -204,7 +233,7 @@ function sectionsOf(text) {
     .map((section) => ({
       title: clip(section?.title, 40),
       lines: Array.isArray(section?.lines)
-        ? section.lines.map((line) => clip(line, 180)).filter(Boolean).slice(0, 4)
+        ? section.lines.map((line) => clip(line, 360)).filter(Boolean).slice(0, 4)
         : [],
     }))
     .filter((section) => section.title && section.lines.length)

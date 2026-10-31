@@ -4,11 +4,12 @@ import { RouterLink } from '@angular/router';
 import { IonButton, IonCheckbox, IonIcon, IonInput, IonNote } from '@ionic/angular';
 import {
   BIRTH_MONTH, COUNTRY_CODES, ELEMENTS, ELEMENT_DESCRIPTIONS, MODALITIES, MODALITY_DESCRIPTIONS, NUMBER_MEANINGS, PLACES,
-  ZODIAC, chartFor, countryName as countryLabel, type Profile, type ZodiacSign,
+  ZODIAC, chartFor, natalAspects, countryName as countryLabel, type Profile, type ZodiacSign,
 } from '../../core';
 import { lifeAreas } from '../../core/life-areas';
 import { AREA_WHY, CN_ELEMENT, CN_POLE, MOON_NEED, NUMBER_USE, RISE_FACE, STONE_NOTE } from '../../core/reading-use';
 import { pageUrlForShare, setSharePreview } from '../../core/seo';
+import { ASPECT_INFO } from '../../core/texts';
 import { SHARE_CHANNELS } from '../../core/share-channels';
 import { profileShareText, profileShortText } from '../../core/share-text';
 import { CHART_SANCTUARY } from '../../core/chart-sanctuary';
@@ -68,8 +69,8 @@ export class ProfilePage {
   weaveStep = 0;
   private weaveTimer: ReturnType<typeof setInterval> | null = null;
   private thinkHooked = false;
-  private readonly thinkHe = ['קורא את מה שכבר כתוב', 'מחבר זוגיות, פרנסה ובריאות', 'כותב את הניתוח'];
-  private readonly thinkEn = ['Reading what is already written', 'Connecting relationship, livelihood and health', 'Writing the analysis'];
+  private readonly thinkHe = ['קורא את מיקומי הכוכבים', 'מחפש את ההיבט ההדוק', 'כותב תמונת אישיות'];
+  private readonly thinkEn = ['Reading the planet positions', 'Looking for the tightest aspect', 'Writing a personality picture'];
   private rot = 0;
   private lastIndex: number | null = null;
   /** מחכים שהגלגל ייכנס למסך, ואז מתחיל הסיבוב */
@@ -237,6 +238,7 @@ export class ProfilePage {
   private skyFacts() {
     if (!this.placeId) return {};
     const lang = this.lang.lang();
+    const he = lang === 'he';
     const known = this.timeKnown && !!this.time;
     const { chart, place } = chartFor({
       name: this.name.trim() || this.lang.text().guest,
@@ -245,11 +247,38 @@ export class ProfilePage {
       timeKnown: known,
       placeId: this.placeId,
     }, lang);
+    const names: Record<string, string> = he
+      ? { sun: 'שמש', moon: 'ירח', mercury: 'כוכב חמה', venus: 'נוגה', mars: 'מאדים', jupiter: 'צדק', saturn: 'שבתאי', asc: 'מזל עולה' }
+      : { sun: 'Sun', moon: 'Moon', mercury: 'Mercury', venus: 'Venus', mars: 'Mars', jupiter: 'Jupiter', saturn: 'Saturn', asc: 'Ascendant' };
+    const ids = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn'] as const;
+    const bodies = ids.flatMap((id) => {
+      const point = chart.points[id];
+      if (!point) return [];
+      const house = known && point.house ? (he ? `, בית ${point.house}` : `, house ${point.house}`) : '';
+      const retro = point.retro ? (he ? ', נסיגה' : ', retrograde') : '';
+      const placeIn = he ? `ב${point.sign.name.he}` : `in ${point.sign.name.en}`;
+      return [`${names[id]} ${placeIn} ${Math.round(point.deg)}°${house}${retro}`];
+    });
+    const asc = chart.points.asc;
+    if (known && asc) {
+      bodies.push(he
+        ? `${names.asc} ב${asc.sign.name.he} ${Math.round(asc.deg)}°`
+        : `${names.asc} in ${asc.sign.name.en} ${Math.round(asc.deg)}°`);
+    }
+    const personal = new Set<string>(known ? ['sun', 'moon', 'mercury', 'venus', 'mars', 'asc'] : ['sun', 'moon', 'mercury', 'venus', 'mars']);
+    const aspects = natalAspects(chart)
+      .filter((aspect) => personal.has(aspect.a) && personal.has(aspect.b) && aspect.orb <= 5)
+      .slice(0, 5)
+      .map((aspect) => he
+        ? `${names[aspect.a]} ${ASPECT_INFO[aspect.type].name.he} ${names[aspect.b]}, מרחק ${aspect.orb.toFixed(1)} מעלות`
+        : `${names[aspect.a]} ${ASPECT_INFO[aspect.type].name.en} ${names[aspect.b]}, ${aspect.orb.toFixed(1)} degrees apart`);
     const moon = chart.points.moon;
-    const rising = chart.points.asc;
+    const moonName = moon?.sign.name[lang];
     return {
-      moon: moon ? { sign: moon.sign.name[lang], estimated: !known, place: place.label } : undefined,
-      rising: rising && known ? { sign: rising.sign.name[lang], place: place.label, time: this.time } : undefined,
+      moon: moon && moonName ? { sign: moonName, estimated: !known, place: place.label } : undefined,
+      rising: asc && known ? { sign: asc.sign.name[lang], place: place.label, time: this.time } : undefined,
+      bodies,
+      aspects,
     };
   }
 

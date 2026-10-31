@@ -1,10 +1,13 @@
-import { BIRTH_MONTH, ELEMENTS, NUMBER_MEANINGS, ZODIAC, type Profile } from './astro';
+import { BIRTH_MONTH, ELEMENTS, MODALITIES, NUMBER_MEANINGS, ZODIAC, type Profile } from './astro';
 import { lifeAreas } from './life-areas';
 import { CN_ELEMENT, CN_POLE, MOON_NEED, RISE_FACE, STONE_NOTE } from './reading-use';
 
 export interface ReadingSky {
   moon?: { sign: string; estimated: boolean; place: string };
   rising?: { sign: string; place: string; time: string };
+  /** מיקומים והיבטים שחושבו מהשמיים, כשיש עיר */
+  bodies?: string[];
+  aspects?: string[];
 }
 
 /** העובדות שכבר חושבו. המודל מקבל רק את זה, ולא בוחר מזל בעצמו. */
@@ -19,6 +22,12 @@ export interface ReadingFacts {
   celtic: string;
   tarot: string;
   stone: string;
+  decan: string;
+  modality: string;
+  traits: string;
+  /** מיקומים והיבטים אמיתיים, רק כשיש עיר */
+  bodies?: string[];
+  aspects?: string[];
   /** הטקסטים שכבר מופיעים במפה. המודל משלב אותם עם הקריאה שלו. */
   written: ReadingWritten;
   moon?: { sign: string; estimated: boolean; place: string };
@@ -67,10 +76,15 @@ export function readingFacts(profile: Profile, lang: 'he' | 'en', sky: ReadingSk
     celtic: profile.celtic.name[lang],
     tarot: profile.tarot.name[lang],
     stone: profile.birth.stone[lang],
+    decan: profile.western_decan.decan.text[lang],
+    modality: MODALITIES[profile.western_modality][lang],
+    traits: profile.western.traits.map((trait) => trait[lang]).join(', '),
     written: writtenOf(profile, lang, sky),
   };
   if (sky.moon?.sign) facts.moon = sky.moon;
   if (sky.rising?.sign) facts.rising = sky.rising;
+  if (sky.bodies?.length) facts.bodies = sky.bodies;
+  if (sky.aspects?.length) facts.aspects = sky.aspects;
   return facts;
 }
 
